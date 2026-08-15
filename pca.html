@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Principal Component Analysis (PCA) — 100-Question Mastery Lab</title>
+<style>
+  :root {
+    --bg-main: #0f172a;
+    --bg-card: #1e293b;
+    --bg-card-hover: #334155;
+    --border-color: #334155;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --accent-blue: #38bdf8;
+    --accent-indigo: #818cf8;
+    --correct-bg: rgba(16, 185, 129, 0.2);
+    --correct-border: #10b981;
+    --correct-text: #34d399;
+    --incorrect-bg: rgba(239, 68, 68, 0.2);
+    --incorrect-border: #ef4444;
+    --incorrect-text: #f87171;
+    --neutral-btn-bg: #1e293b;
+    --neutral-btn-hover: #334155;
+    --neutral-btn-border: #475569;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    line-height: 1.6;
+    padding-bottom: 80px;
+  }
+
+  /* Sticky Top Dashboard */
+  .sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(15, 23, 42, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-color);
+    padding: 16px 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+
+  .header-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .title-area h1 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .title-area h1 span {
+    color: var(--accent-blue);
+  }
+
+  .title-area p {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+
+  .stats-cluster {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .stat-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .stat-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+  }
+
+  .stat-value {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-main);
+  }
+
+  .stat-value.score-val { color: var(--accent-blue); }
+  .stat-value.acc-val { color: var(--correct-text); }
+
+  .progress-container {
+    width: 100%;
+    max-width: 1000px;
+    margin: 8px auto 0;
+    height: 6px;
+    background: #334155;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent-blue), var(--accent-indigo));
+    transition: width 0.3s ease;
+  }
+
+  /* Main Container */
+  .main-layout {
+    max-width: 1000px;
+    margin: 32px auto;
+    padding: 0 16px;
+  }
+
+  .exam-info-banner {
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 32px;
+  }
+
+  .exam-info-banner h2 {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+    color: var(--accent-blue);
+  }
+
+  .exam-info-banner p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+
+  /* Question Card */
+  .question-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 24px;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+
+  .question-card:hover {
+    border-color: #475569;
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+
+  .q-badge {
+    background: #0f172a;
+    border: 1px solid var(--border-color);
+    color: var(--accent-blue);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .q-topic {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+
+  .q-text {
+    font-size: 1.02rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 20px;
+  }
+
+  /* Choices Grid */
+  .choices-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .choice-btn {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    width: 100%;
+    text-align: left;
+    background: var(--neutral-btn-bg);
+    border: 1px solid var(--neutral-btn-border);
+    color: var(--text-main);
+    padding: 14px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.92rem;
+    transition: all 0.2s ease;
+  }
+
+  .choice-btn:hover:not(:disabled) {
+    background: var(--neutral-btn-hover);
+    border-color: var(--accent-blue);
+    transform: translateX(4px);
+  }
+
+  .choice-prefix {
+    background: #0f172a;
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    min-width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .choice-btn:disabled {
+    cursor: default;
+  }
+
+  /* Feedback States */
+  .choice-btn.correct-choice {
+    background: var(--correct-bg) !important;
+    border-color: var(--correct-border) !important;
+    color: var(--correct-text) !important;
+  }
+
+  .choice-btn.correct-choice .choice-prefix {
+    background: var(--correct-border);
+    color: #042f2e;
+    border-color: var(--correct-border);
+  }
+
+  .choice-btn.incorrect-choice {
+    background: var(--incorrect-bg) !important;
+    border-color: var(--incorrect-border) !important;
+    color: var(--incorrect-text) !important;
+  }
+
+  .choice-btn.incorrect-choice .choice-prefix {
+    background: var(--incorrect-border);
+    color: #450a0a;
+    border-color: var(--incorrect-border);
+  }
+
+  .choice-btn.dimmed {
+    opacity: 0.45;
+  }
+
+  /* Explanation Box */
+  .explanation-card {
+    display: none;
+    margin-top: 18px;
+    padding: 16px;
+    background: #0f172a;
+    border-left: 4px solid var(--accent-blue);
+    border-radius: 0 8px 8px 0;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .explanation-card strong {
+    color: var(--accent-blue);
+    display: block;
+    margin-bottom: 4px;
+    font-size: 0.9rem;
+  }
+
+  /* Action Controls */
+  .bottom-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+    gap: 16px;
+  }
+
+  .reset-btn {
+    background: #334155;
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .reset-btn:hover {
+    background: #475569;
+  }
+
+  @media (max-width: 768px) {
+    .header-content {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .stats-cluster {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header class="sticky-header">
+  <div class="header-content">
+    <div class="title-area">
+      <h1><span>PCA</span> Practice Examination</h1>
+      <p>100 Questions &bull; Theory, Geometry, Code & Applied ML</p>
+    </div>
+    <div class="stats-cluster">
+      <div class="stat-box">
+        <span class="stat-label">Answered</span>
+        <span class="stat-value" id="answeredCount">0 / 100</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-label">Score</span>
+        <span class="stat-value score-val" id="scoreVal">0</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-label">Accuracy</span>
+        <span class="stat-value acc-val" id="accVal">0%</span>
+      </div>
+    </div>
+  </div>
+  <div class="progress-container">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+</header>
+
+<main class="main-layout">
+  <div class="exam-info-banner">
+    <h2>Academic Practice Assessment</h2>
+    <p>This exam assesses core conceptual intuition, geometric transformations, variance preservation, Python/Scikit-Learn workflows, component interpretations, and practical computer vision use cases. Click any choice for instant academic evaluation and explanatory breakdowns.</p>
+  </div>
+
+  <div id="quizContainer"></div>
+
+  <div class="bottom-actions">
+    <button class="reset-btn" onclick="resetQuiz()">Restart & Reset Assessment</button>
+  </div>
+</main>
+
+<script>
+const rawQuestions = [
+  // Block 1 (Q1-10)
+  {
+    q: "How is Principal Component Analysis (PCA) fundamentally classified within the taxonomy of machine learning techniques?",
+    topic: "Foundations of PCA",
+    options: [
+      "A supervised algorithm designed to maximize class separability using labels.",
+      "A reinforcement learning agent designed to optimize coordinate decisions.",
+      "An unsupervised technique for linear orthogonal dimensionality reduction.",
+      "A semi-supervised model designed to estimate missing label distributions."
+    ],
+    ans: 2,
+    exp: "PCA is an unsupervised technique because it relies strictly on feature correlations and total variance without using any target class labels."
+  },
+  {
+    q: "When comparing Feature Selection with Dimensionality Reduction via PCA, what is the primary operational distinction?",
+    topic: "Feature Selection vs PCA",
+    options: [
+      "PCA creates new composite features via linear combinations of existing ones.",
+      "Feature selection synthesizes entirely new coordinate vectors across space.",
+      "PCA strictly retains a subset of original features while dropping the rest.",
+      "Feature selection is only applicable when features are highly correlated."
+    ],
+    ans: 0,
+    exp: "Feature selection drops unselected original features, whereas PCA transforms the feature space by constructing new linear combinations."
+  },
+  {
+    q: "Why is data variance treated as a central proxy for information content within the theoretical framework of PCA?",
+    topic: "Variance as Information",
+    options: [
+      "Zero variance across a dimension ensures maximum discrimination between samples.",
+      "Low variance guarantees that a feature contains unique non-redundant signal.",
+      "Variance measures the degree of non-linear polynomial curvature in datasets.",
+      "Higher spread indicates greater differentiation and distinguishable signal."
+    ],
+    ans: 3,
+    exp: "Dimensions with high variance preserve more spread and distinction among data points, whereas zero variance implies identical values across all samples."
+  },
+  {
+    q: "In high-dimensional feature spaces, what geometric pathology directly hinders distance-based algorithms (such as k-NN)?",
+    topic: "Curse of Dimensionality",
+    options: [
+      "Data points become tightly clustered around a single deterministic centroid.",
+      "Pairwise Euclidean distances between all sample points become nearly equidistant.",
+      "The volume of the enclosing geometric bounding sphere shrinks towards zero.",
+      "The computational covariance matrix collapses into a singular zero matrix."
+    ],
+    ans: 1,
+    exp: "As dimensionality increases, data sparsity grows and all pairwise Euclidean distances tend to converge, rendering proximity metrics ineffective."
+  },
+  {
+    q: "What is the primary geometric transformation applied to the dataset during a standard PCA operation?",
+    topic: "Geometric Transformation",
+    options: [
+      "A rigid orthogonal rotation of the coordinate axes to align with maximal spread.",
+      "A non-linear kernel warping that maps linear vectors into infinite manifolds.",
+      "A random projection onto an arbitrary set of non-orthogonal oblique axes.",
+      "A non-convex spatial clustering that shifts points toward local modal centers."
+    ],
+    ans: 0,
+    exp: "PCA performs a linear orthogonal transformation that rotates the coordinate system so that new axes align with the orthogonal directions of maximum variance."
+  },
+  {
+    q: "Consider a 2D dataset where Feature 1 exhibits substantial spread while Feature 2 has near-zero variance. What is the ideal reduction strategy?",
+    topic: "2D Toy Example",
+    options: [
+      "Rotate the axes by 45 degrees before projecting all points onto Feature 2.",
+      "Retain both features because dropping either loses vital classification signal.",
+      "Safely drop Feature 1 and use Feature 2 directly as the final representation.",
+      "Safely drop Feature 2 and use Feature 1 directly as the final representation."
+    ],
+    ans: 3,
+    exp: "When an original axis is already aligned with minimal variance, it carries almost no discriminatory information and can be dropped directly."
+  },
+  {
+    q: "What occurs if two features have equal variance and strong positive correlation, and one feature is dropped directly without PCA?",
+    topic: "Correlated 2D Features",
+    options: [
+      "The dataset retains 100% of its information because the features are redundant.",
+      "Approximately half of the total informational variance in the data is lost.",
+      "The remaining feature automatically scales to absorb the missing variance.",
+      "The data distribution becomes non-linear and cannot be classified linearly."
+    ],
+    ans: 1,
+    exp: "Dropping one of two equally informative correlated axes discards roughly half the variance; PCA rotates the axes to capture almost all variance in one component."
+  },
+  {
+    q: "What mathematical property characterizes the relationship between all pairs of Principal Components in PCA?",
+    topic: "Component Orthogonality",
+    options: [
+      "They form acute angles with each other to maintain directional correlation.",
+      "They are collinear vectors scaled by their respective singular eigenvalues.",
+      "They are non-linear polynomials designed to wrap around curved boundaries.",
+      "They are mutually perpendicular (orthogonal) unit vectors with zero covariance."
+    ],
+    ans: 3,
+    exp: "Principal components are defined to be orthogonal (perpendicular) to each other, ensuring that the transformed features are completely uncorrelated."
+  },
+  {
+    q: "What length constraint is strictly imposed on the directional vectors ($u_1, u_2, \\dots$) defining the Principal Components?",
+    topic: "Unit Vector Constraint",
+    options: [
+      "They must be unit vectors with an Euclidean norm strictly equal to 1.",
+      "Their length must equal the total variance of their respective component.",
+      "Their magnitude must match the total number of training data observations.",
+      "Their Euclidean norm must scale dynamically with the dataset mean vector."
+    ],
+    ans: 0,
+    exp: "Directional vectors defining principal axes are normalized to unit length ($\\|u\\|=1$) so they represent pure directions without scaling variance artificially."
+  },
+  {
+    q: "How does PCA simultaneously satisfy two seemingly distinct mathematical optimization objectives?",
+    topic: "Optimization Duality",
+    options: [
+      "By minimizing the dataset mean while maximizing the diagonal covariance trace.",
+      "By maximizing the number of features while minimizing model training latency.",
+      "By maximizing projected variance while minimizing reconstruction error.",
+      "By minimizing class overlap while maximizing the margin of a hyperplane."
+    ],
+    ans: 2,
+    exp: "By the Pythagorean theorem, maximizing the variance of projected points on a subspace is mathematically equivalent to minimizing the squared reconstruction error."
+  },
+
+  // Block 2 (Q11-20)
+  {
+    q: "Why is mean centering (subtracting the mean from each feature) an essential prerequisite before computing PCA?",
+    topic: "Mean Centering",
+    options: [
+      "It scales all feature variances to exactly one regardless of raw spread.",
+      "It aligns the coordinate origin with the dataset centroid for pure rotation.",
+      "It eliminates all non-linear relationships and normalizes the target labels.",
+      "It converts asymmetric continuous features into discrete categorical bins."
+    ],
+    ans: 1,
+    exp: "Mean subtraction centers the dataset at the origin $(0,0)$, ensuring that the first component captures variance rather than an offset from the origin."
+  },
+  {
+    q: "What does the Hughes Phenomenon (Curse of Dimensionality in classification) demonstrate?",
+    topic: "Curse of Dimensionality",
+    options: [
+      "Adding more dimensions always guarantees a monotonic increase in accuracy.",
+      "High dimensionality speeds up tree-based algorithms due to feature density.",
+      "Model accuracy improves with features up to an optimum, then degrades.",
+      "Increasing sample size without adding new features leads to severe overfitting."
+    ],
+    ans: 2,
+    exp: "Hughes phenomenon shows that beyond a certain point, adding features with fixed sample size causes data sparsity and degrades model performance."
+  },
+  {
+    q: "In a rotated PCA coordinate space, what does the off-diagonal structure of the covariance matrix look like?",
+    topic: "Covariance Diagonalization",
+    options: [
+      "All off-diagonal entries are approximately zero, showing decorrelation.",
+      "All off-diagonal values equal the total sum of the individual variances.",
+      "The off-diagonal entries contain positive values identical to the mean.",
+      "The off-diagonal elements oscillate between negative and positive infinity."
+    ],
+    ans: 0,
+    exp: "Because principal components are mutually orthogonal, their pairwise covariances are zero, making the covariance matrix purely diagonal."
+  },
+  {
+    q: "What do the diagonal entries of the transformed covariance matrix represent after PCA rotation?",
+    topic: "Covariance Matrix Properties",
+    options: [
+      "The mean absolute error incurred when reconstructing that specific feature.",
+      "The correlation coefficient between each component and the target class.",
+      "The individual variance captured along each respective principal component.",
+      "The Euclidean distance between the component vector and the original axes."
+    ],
+    ans: 2,
+    exp: "The diagonal entries of the diagonalized covariance matrix represent the variances accounted for by each individual principal component."
+  },
+  {
+    q: "What is the primary operational goal of performing an Inverse Transform (Back-rotation) in PCA?",
+    topic: "Inverse Transformation",
+    options: [
+      "To generate completely new synthetic samples for data augmentation pipelines.",
+      "To project 1D/low-D data back into the original space to inspect reconstruction.",
+      "To re-introduce multicollinearity so that linear models can fit properly.",
+      "To compute the supervised class boundary in a non-linear kernel space."
+    ],
+    ans: 1,
+    exp: "Inverse transform maps the reduced data back to original coordinate dimensions, allowing visual inspection of information retention and noise removal."
+  },
+  {
+    q: "How does PCA act as an effective noise reduction filter during data reconstruction?",
+    topic: "Noise Reduction",
+    options: [
+      "By eliminating the mean vector before calculating the feature projections.",
+      "By setting all high-variance components to zero during the inverse transform.",
+      "By discarding low-variance components that typically capture random noise.",
+      "By smoothing the target labels using a rolling window moving-average filter."
+    ],
+    ans: 2,
+    exp: "Low-variance components often represent noise and minor fluctuations; dropping them and reconstructing retains only the dominant structural signal."
+  },
+  {
+    q: "Why is PCA considered highly sensitive to the scale of raw input features?",
+    topic: "Scale Sensitivity",
+    options: [
+      "Features with large numeric ranges dominate the variance and bias components.",
+      "Features with small scales automatically cause division-by-zero exceptions.",
+      "PCA algorithms reject any feature that does not follow a Poisson distribution.",
+      "Large-scale features are automatically dropped by Scikit-Learn during fitting."
+    ],
+    ans: 0,
+    exp: "PCA maximizes variance. A feature measured in huge units (e.g., mm² vs cm) artificially dominates variance, skewing components toward that axis."
+  },
+  {
+    q: "Which Scikit-Learn transformer is standardly applied before PCA to ensure all features have unit variance and zero mean?",
+    topic: "Scikit-Learn Preprocessing",
+    options: [
+      "MinMaxScaler",
+      "StandardScaler",
+      "RobustScaler",
+      "Normalizer"
+    ],
+    ans: 1,
+    exp: "StandardScaler standardizes features by removing the mean and scaling to unit variance ($z = (x - \\mu)/\\sigma$), which is crucial for unbiased PCA."
+  },
+  {
+    q: "When PCA is fitted on the Breast Cancer dataset (569 samples, 30 features) with `n_components=2`, what is the output shape of `pca.transform(X_scaled)`?",
+    topic: "Scikit-Learn Implementation",
+    options: [
+      "(30, 2)",
+      "(569, 30)",
+      "(569, 2)",
+      "(2, 569)"
+    ],
+    ans: 2,
+    exp: "The transformed data retains all 569 observations but compresses the 30 original feature columns down to the 2 specified principal components."
+  },
+  {
+    q: "What is the dimensional shape of the `pca.components_` attribute when `PCA(n_components=2)` is fitted on a 30-feature dataset?",
+    topic: "Component Matrix Anatomy",
+    options: [
+      "(30, 2)",
+      "(569, 2)",
+      "(569, 30)",
+      "(2, 30)"
+    ],
+    ans: 3,
+    exp: "`pca.components_` has shape `(n_components, n_features)`, which corresponds to 2 principal component rows, each containing 30 feature loadings/weights."
+  },
+
+  // Block 3 (Q21-30)
+  {
+    q: "What does each row in the `pca.components_` array mathematically represent?",
+    topic: "Component Interpretation",
+    options: [
+      "A single patient's transformed coordinates inside the 2D latent space.",
+      "The linear combination weights (loadings) assigned to each original feature.",
+      "The reconstruction error associated with removing a specific feature.",
+      "The individual p-values measuring the statistical significance of features."
+    ],
+    ans: 1,
+    exp: "Each row is an eigenvector representing a principal component, containing the linear weights (loadings) for all original input features."
+  },
+  {
+    q: "Why is interpreting the exact meaning of individual Principal Components often difficult in real-world applications?",
+    topic: "Interpretability Challenges",
+    options: [
+      "Each component is a complex linear blend of many different original features.",
+      "The output values of PCA are imaginary numbers containing complex roots.",
+      "Principal components can only be visualized using 1D single-axis histograms.",
+      "The Scikit-Learn implementation hides the component weights from the user."
+    ],
+    ans: 0,
+    exp: "Components are linear combinations mixing all original variables together, making it hard to assign a single intuitive physical meaning to an axis."
+  },
+  {
+    q: "When plotting a 2D scatter plot of the first two principal components, why is `plt.gca().set_aspect('equal')` recommended?",
+    topic: "Visualization Best Practices",
+    options: [
+      "It forces the plot to become a 3D stereoscopic rendering automatically.",
+      "It converts raw continuous coordinates into discrete integer intervals.",
+      "It ensures equal geometric scale so variance differences are visually accurate.",
+      "It eliminates negative coordinate axes to simplify visual interpretation."
+    ],
+    ans: 2,
+    exp: "Equal aspect ratio ensures that 1 unit on the x-axis equals 1 unit on the y-axis, accurately reflecting the true variance ratio between components."
+  },
+  {
+    q: "In the Breast Cancer dataset, what visual pattern emerged on the 2D PCA scatter plot without using any label information during fitting?",
+    topic: "Unsupervised Class Separation",
+    options: [
+      "Points formed an uninformative circular cloud with complete class mixing.",
+      "Points collapsed into a single discrete 1D vertical line along the y-axis.",
+      "Malignant and benign classes were split into 30 distinct isolated clusters.",
+      "Malignant and benign samples showed clear, linear separation along PC1."
+    ],
+    ans: 3,
+    exp: "Even without labels, PCA's first principal component captured the dominant direction of biological variation, effectively separating benign and malignant tumors."
+  },
+  {
+    q: "In the heatmap visualization of PCA components for the Breast Cancer dataset, what characterized the loadings of First Principal Component (PC1)?",
+    topic: "Component Heatmap Analysis",
+    options: [
+      "All features showed roughly consistent positive weights, reflecting general cell size.",
+      "All features had zero weight except for mean radius and smoothness error.",
+      "The weights oscillated strictly between +1.0 and -1.0 across adjacent columns.",
+      "All weights were negative fractions corresponding to image pixel intensity."
+    ],
+    ans: 0,
+    exp: "PC1 showed consistent positive loadings across all features, meaning it acts as a composite indicator of overall tumor size and magnitude."
+  },
+  {
+    q: "What pattern characterized the weights of the Second Principal Component (PC2) in the Breast Cancer heatmap?",
+    topic: "Component Heatmap Analysis",
+    options: [
+      "It assigned identical zero weights to all thirty measured characteristics.",
+      "It showed a contrast between positive error/texture weights and negative size weights.",
+      "It duplicated the exact sign and magnitude of all PC1 feature loadings.",
+      "It retained only the categorical target class labels as continuous values."
+    ],
+    ans: 1,
+    exp: "PC2 exhibited contrasting positive and negative weights, capturing trade-offs between size-related metrics and fine shape/error metrics."
+  },
+  {
+    q: "Why are univariate feature histograms insufficient for evaluating complex high-dimensional datasets compared to PCA?",
+    topic: "Histograms vs PCA",
+    options: [
+      "Histograms can only display categorical features and cannot handle floats.",
+      "Histograms always artificially normalize the variance of every single feature.",
+      "Histograms require ten times more computational memory than PCA algorithms.",
+      "Histograms show marginal distributions but miss multivariate feature interactions."
+    ],
+    ans: 3,
+    exp: "Histograms look at features in isolation (univariate), completely missing correlations, covariances, and joint interactions captured by PCA."
+  },
+  {
+    q: "What does high positive covariance between two random variables indicate geometrically on a 2D scatter plot?",
+    topic: "Covariance Intuition",
+    options: [
+      "Data points form a horizontal line parallel to the independent x-axis.",
+      "Data points form a perfectly circular cluster centered at the origin.",
+      "Data points trend upwards in a diagonal pattern from bottom-left to top-right.",
+      "Data points trend downwards in a diagonal pattern from top-left to bottom-right."
+    ],
+    ans: 2,
+    exp: "Positive covariance means that as one variable increases, the other tends to increase, resulting in an upward-sloping diagonal distribution."
+  },
+  {
+    q: "What does a covariance value near zero between two features imply?",
+    topic: "Covariance Intuition",
+    options: [
+      "There is no linear relationship or systematic linear trend between the variables.",
+      "The two features are perfectly identical and share duplicate information.",
+      "Both features have zero variance and collapse into a single static point.",
+      "One feature is guaranteed to be a deterministic quadratic function of the other."
+    ],
+    ans: 0,
+    exp: "Near-zero covariance indicates linear independence (lack of linear correlation), meaning changes in one variable do not linearly predict the other."
+  },
+  {
+    q: "How does the calculation of single-variable Variance differ from two-variable Covariance?",
+    topic: "Statistical Foundations",
+    options: [
+      "Variance uses absolute deviations, while covariance uses squared deviations.",
+      "Variance measures spread of one variable; covariance measures joint variability.",
+      "Variance is only defined for 2D datasets, while covariance applies to 1D vectors.",
+      "Variance must be normalized between -1 and +1, whereas covariance is unbounded."
+    ],
+    ans: 1,
+    exp: "Variance quantifies the dispersion of a single feature around its mean, whereas covariance measures how two features vary together."
+  },
+
+  // Block 4 (Q31-40)
+  {
+    q: "In the context of computer vision and face recognition, what is the raw representation of an $87 \\times 65$ grayscale image?",
+    topic: "High-D Image Representation",
+    options: [
+      "A compact vector containing 62 facial landmark coordinates.",
+      "A non-linear graph structure representing biological muscle movements.",
+      "A 2D matrix of RGB color palettes scaled between -1 and +1.",
+      "A 5,655-dimensional vector where each pixel acts as an input feature."
+    ],
+    ans: 3,
+    exp: "$87 \\times 65 = 5,655$ pixels. Flattening the image creates a 5,655-dimensional feature vector where each pixel intensity is a separate feature."
+  },
+  {
+    q: "Why is using raw pixel values directly in distance-based classifiers problematic for face recognition?",
+    topic: "Raw Pixel Limitations",
+    options: [
+      "Pixel values are discrete integers that cannot be stored inside NumPy arrays.",
+      "Individual pixels carry little semantic meaning and vary heavily with lighting/pose.",
+      "Pixel intensities cannot be plotted in two-dimensional Cartesian coordinates.",
+      "Distance calculations on raw pixels violate the mathematical rules of linear algebra."
+    ],
+    ans: 1,
+    exp: "Individual pixels do not convey holistic facial identity; minor lighting changes or slight head shifts drastically alter raw pixel distances."
+  },
+  {
+    q: "What baseline test accuracy did a 1-Nearest Neighbor classifier achieve when trained directly on raw pixel vectors of the LFW dataset?",
+    topic: "Baseline Face Classification",
+    options: [
+      "Approximately 95% due to the high resolution of the facial images.",
+      "Approximately 27% due to pixel sensitivity to illumination and pose variations.",
+      "Approximately 0% because 1-NN cannot run on datasets with over 1,000 samples.",
+      "Approximately 62% corresponding exactly to the number of target classes."
+    ],
+    ans: 1,
+    exp: "In the lecture demonstration, 1-NN on raw pixel vectors achieved only ~27% accuracy, illustrating the failure of raw pixel Euclidean distance."
+  },
+  {
+    q: "What severe data distribution problem was identified in the LFW face dataset before applying PCA?",
+    topic: "Class Imbalance in PCA",
+    options: [
+      "Severe class imbalance with certain individuals dominating image counts.",
+      "Extreme multi-collinearity causing the dataset matrix to be completely uninvertible.",
+      "A total lack of grayscale variance across all 62 target facial identities.",
+      "Complete corruption of target labels with random non-numeric string values."
+    ],
+    ans: 0,
+    exp: "Individuals like George W. Bush (530 images) and Colin Powell (236 images) heavily dominated the dataset compared to others with only 20 images."
+  },
+  {
+    q: "Why does severe class imbalance harm the quality of unsupervised PCA feature extraction?",
+    topic: "Class Imbalance Effects",
+    options: [
+      "It causes Scikit-Learn to throw a convergence warning and abort execution.",
+      "It forces the covariance matrix to contain negative values along its diagonal.",
+      "It reduces the number of extractable principal components from 30 down to 2.",
+      "PCA captures the variance of dominant individuals rather than general facial traits."
+    ],
+    ans: 3,
+    exp: "Unsupervised PCA maximizes total variance. Dominant classes contribute most of the variance, biasing the components toward their specific lighting/features."
+  },
+  {
+    q: "How was the class imbalance issue mitigated in the LFW face recognition case study?",
+    topic: "Subsampling Strategy",
+    options: [
+      "By removing all images belonging to public figures and politicians.",
+      "By synthesizing 500 artificial images for every underrepresented class.",
+      "By subsampling and capping the dataset to a maximum of 50 images per person.",
+      "By applying a non-linear Gaussian kernel transform to the target vector."
+    ],
+    ans: 2,
+    exp: "To prevent dominant individuals from skewing the principal components, the dataset was subsampled to at most 50 images per individual."
+  },
+  {
+    q: "Why were grayscale pixel values divided by 255.0 (`X_people = X_people / 255.0`) before processing?",
+    topic: "Data Normalization",
+    options: [
+      "To convert integer pixel levels [0, 255] to a floating-point range [0, 1].",
+      "To invert the dark and light regions of the image for edge detection.",
+      "To reduce the spatial resolution of the images from 87x65 down to 10x10.",
+      "To eliminate the DC bias of the camera sensors and remove salt-and-pepper noise."
+    ],
+    ans: 0,
+    exp: "Dividing by 255.0 scales pixel intensities to the range [0, 1], improving numeric stability during covariance and eigenvalue calculations."
+  },
+  {
+    q: "In the 'Eigenfaces' decomposition perspective, how is an individual face image mathematically represented?",
+    topic: "Linear Decomposition View",
+    options: [
+      "As a decision tree path formed by thresholding individual pixel intensities.",
+      "As a weighted sum (linear combination) of principal component basis images.",
+      "As a non-linear polynomial kernel mapping onto a high-dimensional sphere.",
+      "As a discrete probability distribution over all 62 person identity classes."
+    ],
+    ans: 1,
+    exp: "$X \\approx \\sum x_k u_k$. Each face is expressed as a weighted sum of principal component vectors (Eigenfaces), with weights acting as compact features."
+  },
+  {
+    q: "What do the coefficients ($x_0, x_1, x_2, \\dots$) in the Eigenface expansion $X \\approx x_0 u_0 + x_1 u_1 + \\dots$ represent?",
+    topic: "Projection Coefficients",
+    options: [
+      "The physical measurements of eye-to-nose distance in millimeters.",
+      "The reconstruction residuals discarded as high-frequency image noise.",
+      "The confidence probabilities output by a softmax logistic classifier.",
+      "The new low-dimensional feature values obtained after PCA projection."
+    ],
+    ans: 3,
+    exp: "The coefficients $x_k$ are the scalar projections (dot products) of the face onto each eigenvector, serving as the compact feature coordinates."
+  },
+  {
+    q: "Why can the principal component vectors extracted from image datasets be displayed visually as images (Eigenfaces)?",
+    topic: "Eigenface Visualization",
+    options: [
+      "Because they are generated by a deep generative adversarial network (GAN).",
+      "Because their values are automatically converted into 3-channel RGB maps.",
+      "Because each component vector has the exact same dimensionality ($87 \\times 65$) as the input images.",
+      "Because Scikit-Learn stores them as compressed PNG files inside the model."
+    ],
+    ans: 2,
+    exp: "Each eigenvector has length 5,655 (equal to the number of input pixels), allowing it to be reshaped into $87 \\times 65$ and rendered as an image."
+  },
+
+  // Block 5 (Q41-50)
+  {
+    q: "What visual characteristic does the very first principal component (Eigenface 0) typically capture in facial datasets?",
+    topic: "Eigenface Interpretation",
+    options: [
+      "Overall illumination, average face shape, and global lighting across the scene.",
+      "Fine textural details such as individual wrinkles, eyelashes, and skin pores.",
+      "Sharp high-frequency noise caused by sensor errors during camera capture.",
+      "Specific personal identifiers such as eyeglasses or unique facial scars."
+    ],
+    ans: 0,
+    exp: "The first principal component captures the largest source of variation across the dataset, which is typically overall lighting and average facial luminance."
+  },
+  {
+    q: "How does reducing image dimensions via PCA boost the performance of subsequent classification models?",
+    topic: "Benefits of PCA",
+    options: [
+      "It guarantees 100% test accuracy regardless of the classifier chosen.",
+      "It mitigates the curse of dimensionality, reduces noise, and extracts key structures.",
+      "It converts multi-class classification into multiple independent binary tasks.",
+      "It increases the total number of training samples available to the model."
+    ],
+    ans: 1,
+    exp: "PCA compresses the thousands of raw pixels into informative, uncorrelated features, filtering noise and overcoming high-dimensional sparsity."
+  },
+  {
+    q: "What is the primary operational difference between PCA and Linear Discriminant Analysis (LDA)?",
+    topic: "PCA vs LDA",
+    options: [
+      "PCA is supervised and uses labels; LDA is unsupervised and ignores labels.",
+      "PCA rotates data arbitrarily; LDA always applies non-linear kernel warps.",
+      "PCA requires categorical variables; LDA requires continuous text features.",
+      "PCA is unsupervised and maximizes variance; LDA is supervised and maximizes class separation."
+    ],
+    ans: 3,
+    exp: "PCA maximizes total data variance without using class labels (unsupervised), while LDA finds axes that maximize between-class separation relative to within-class spread (supervised)."
+  },
+  {
+    q: "If a dataset has 10 numerical features, what is the theoretical maximum number of Principal Components that can be extracted?",
+    topic: "Maximum Components",
+    options: [
+      "Exactly 2 components, corresponding to the x and y Cartesian coordinates.",
+      "An infinite number, depending on the number of polynomial degrees chosen.",
+      "Exactly 10 components, equal to the number of original feature dimensions.",
+      "At most 5 components, because half the dimensions must always be dropped."
+    ],
+    ans: 2,
+    exp: "The maximum number of orthogonal principal components is bounded by the original feature dimensionality $\\min(n\\text{ samples}, p\\text{ features})$."
+  },
+  {
+    q: "What does an Explained Variance Ratio of 0.85 for the first component ($PC_1$) mean?",
+    topic: "Explained Variance Ratio",
+    options: [
+      "The first component accounts for 85% of the total variance in the dataset.",
+      "The model will achieve an 85% classification accuracy on test observations.",
+      "85% of the original features were dropped during the initial projection.",
+      "The reconstruction error of the inverse transformation is exactly 85%."
+    ],
+    ans: 0,
+    exp: "Explained variance ratio indicates the fraction of the dataset's total variance captured along that particular principal component axis."
+  },
+  {
+    q: "In an exam question, a student claims: 'PCA always finds directions that optimize classification boundaries.' How should this statement be evaluated?",
+    topic: "Unsupervised Limitations",
+    options: [
+      "Correct, because PCA is designed specifically as a linear supervised classifier.",
+      "Incorrect, because PCA is unsupervised and maximizes variance, which may not align with class boundaries.",
+      "Correct, because high variance is mathematically identical to high class separability.",
+      "Incorrect, because PCA only operates on non-linear polynomial data manifolds."
+    ],
+    ans: 1,
+    exp: "PCA maximizes variance, not class separability. If the variance is driven by noise or lighting rather than class labels, PCA will not separate classes well."
+  },
+  {
+    q: "What happens during the 'Dropping Components' step in a 2D to 1D PCA pipeline?",
+    topic: "Dimensionality Reduction Step",
+    options: [
+      "The original $F_1$ and $F_2$ features are deleted prior to calculating rotation.",
+      "All eigenvalues of the covariance matrix are rescaled to equal zero.",
+      "The transformed coordinate values along $PC_2$ are discarded, retaining only $PC_1$.",
+      "The dataset mean is subtracted a second time to prevent coordinate drift."
+    ],
+    ans: 2,
+    exp: "After rotating into principal components $(PC_1, PC_2)$, dropping the second component means keeping only the $PC_1$ coordinate per sample."
+  },
+  {
+    q: "What mathematical relationship exists between the Eigenvalues of the Covariance Matrix and the Principal Components?",
+    topic: "Eigenvalue Properties",
+    options: [
+      "Eigenvalues represent the exact angular rotation in degrees for each axis.",
+      "Eigenvalues determine the number of training samples in the dataset.",
+      "Eigenvalues are all required to sum to zero across all components.",
+      "Each eigenvalue represents the amount of variance captured along its corresponding eigenvector."
+    ],
+    ans: 3,
+    exp: "The magnitude of each eigenvalue corresponds directly to the amount of variance accounted for by its associated eigenvector (principal component)."
+  },
+  {
+    q: "Why is PCA incapable of capturing non-linear manifold structures (such as a Swiss Roll dataset)?",
+    topic: "Linearity Limitation",
+    options: [
+      "PCA is strictly a linear orthogonal transformation and only finds flat hyperplanes.",
+      "PCA cannot handle floating-point numbers with high decimal precision.",
+      "PCA requires all input data points to be strictly positive integers.",
+      "PCA requires target class labels to compute non-linear curvature metrics."
+    ],
+    ans: 0,
+    exp: "Standard PCA is a linear method that projects data onto flat subspaces (lines, planes, hyperplanes), failing to unroll non-linear manifolds."
+  },
+  {
+    q: "When reconstructing data from reduced dimensions, how is the Reconstruction Error measured geometrically?",
+    topic: "Reconstruction Error",
+    options: [
+      "The angle between the principal component vector and the horizontal axis.",
+      "The squared Euclidean distance between the original point and its orthogonal projection.",
+      "The absolute difference between the dataset mean and the coordinate origin.",
+      "The ratio of the first eigenvalue to the sum of all remaining eigenvalues."
+    ],
+    ans: 1,
+    exp: "Reconstruction error is the squared distance between the original high-dimensional point and its projected position on the lower-dimensional subspace."
+  },
+
+  // Block 6 (Q51-60)
+  {
+    q: "What is the primary function of the `mglearn.plots.plot_pca_illustration()` helper function used in the lecture slides?",
+    topic: "Educational Visualizations",
+    options: [
+      "To download external face recognition images from the scikit-learn repository.",
+      "To optimize the hyperparameters of a support vector machine classifier.",
+      "To provide a visual step-by-step demonstration of centering, rotation, dropping, and reconstruction.",
+      "To calculate the numerical determinant of a 30x30 covariance matrix."
+    ],
+    ans: 2,
+    exp: "The `plot_pca_illustration()` function visually demonstrates the 4 stages of PCA: original data, rotated data, dropped components, and back-rotation."
+  },
+  {
+    q: "If the first two components of PCA explain 92% of the total variance, what percentage of total information was discarded as residual error?",
+    topic: "Variance Calculation",
+    options: [
+      "Exactly 92% of the original dataset information was discarded.",
+      "Exactly 50% corresponding to the half of the features that were dropped.",
+      "Exactly 0% because PCA is an information-preserving transformation.",
+      "Exactly 8% representing the variance along the remaining dropped components."
+    ],
+    ans: 3,
+    exp: "Total variance sums to 100%. If the retained components explain 92%, the discarded components account for $100\\% - 92\\% = 8\\%$ of the variance."
+  },
+  {
+    q: "Why does multicollinearity among features make PCA particularly effective?",
+    topic: "Multicollinearity and PCA",
+    options: [
+      "High correlation means information is redundant, allowing high compression into fewer axes.",
+      "High correlation prevents the calculation of singular matrices during preprocessing.",
+      "Multicollinearity forces all principal components to have identical unit variance.",
+      "Multicollinearity guarantees that all feature weights in the loading matrix are positive."
+    ],
+    ans: 0,
+    exp: "When features are correlated, they share information; PCA rotates axes along these correlations, capturing most variance in a small number of components."
+  },
+  {
+    q: "In a dataset where all 20 features are completely uncorrelated with equal variance, what will PCA accomplish?",
+    topic: "Uncorrelated Features",
+    options: [
+      "It will compress all 20 features into a single 1D component with 100% variance.",
+      "It will fail to achieve effective dimensionality reduction without significant information loss.",
+      "It will automatically generate non-linear polynomial features to capture curvature.",
+      "It will drop 19 features safely because uncorrelation implies zero variance."
+    ],
+    ans: 1,
+    exp: "If features are already uncorrelated and have equal variance, each component explains only $1/20$ (5%) of the variance, making dimensionality reduction ineffective."
+  },
+  {
+    q: "What role does the dot product play when projecting a sample vector $X_i$ onto a principal component unit vector $u_1$?",
+    topic: "Projection Mathematics",
+    options: [
+      "It computes the non-linear geodesic distance across the data manifold.",
+      "It normalizes the vector length to ensure zero mean across all dimensions.",
+      "It measures the classification error of the sample relative to the margin.",
+      "It calculates the scalar coordinate (projection) of $X_i$ along the direction of $u_1$."
+    ],
+    ans: 3,
+    exp: "The scalar projection of centered point $X_i$ onto unit vector $u_1$ is computed by the inner product $X_i^T u_1$, yielding its coordinate on the new axis."
+  },
+  {
+    q: "Which of the following is an Unsupervised Learning property of PCA highlighted in the lecture slides?",
+    topic: "Unsupervised Nature",
+    options: [
+      "It requires cross-validation folds to iteratively optimize class margins.",
+      "It relies on backpropagation to minimize mean squared classification error.",
+      "It evaluates feature correlations without ever reading or knowing target labels.",
+      "It uses entropy and Gini impurity to select optimal orthogonal splitting axes."
+    ],
+    ans: 2,
+    exp: "PCA finds principal components solely by examining feature correlations and covariance, without utilizing any target class labels."
+  },
+  {
+    q: "When visualizing the Breast Cancer dataset, why was a 2D PCA scatter plot superior to 30 individual feature histograms?",
+    topic: "High-D Visualization",
+    options: [
+      "It revealed the collective multivariate separation between classes in a single unified view.",
+      "It completely eliminated the need to scale or normalize input features.",
+      "It converted all categorical strings into continuous numerical floating-point values.",
+      "It guaranteed zero reconstruction error during subsequent machine learning training."
+    ],
+    ans: 0,
+    exp: "The 2D PCA scatter plot integrates the combined discriminatory signal of all 30 features into two axes, revealing separation that single histograms cannot show."
+  },
+  {
+    q: "What does it indicate if the data points in a scatter plot form an ellipse oriented along a 45-degree line?",
+    topic: "Geometric Variance",
+    options: [
+      "The two features are statistically independent with zero covariance.",
+      "The direction of maximum variance lies along that 45-degree diagonal line.",
+      "The dataset has zero total variance and cannot be reduced in dimensionality.",
+      "The second principal component will capture more variance than the first."
+    ],
+    ans: 1,
+    exp: "An elliptical distribution along 45° indicates that the highest spread (variance) lies along that diagonal, which PCA will identify as $PC_1$."
+  },
+  {
+    q: "Why is it mathematically impossible for two Principal Components to have a non-zero covariance with each other?",
+    topic: "Decorrelation Guarantee",
+    options: [
+      "Because all input data points are scaled between -1 and +1 during training.",
+      "Because Scikit-Learn adds a regularization penalty to all off-diagonal values.",
+      "Because the components are computed using supervised cross-entropy losses.",
+      "Because principal components are orthogonal eigenvectors of the symmetric covariance matrix."
+    ],
+    ans: 3,
+    exp: "Eigenvectors of a symmetric covariance matrix are mutually orthogonal, which mathematically guarantees that the covariance between different components is zero."
+  },
+  {
+    q: "What is the primary consequence of failing to apply `StandardScaler` to features with different measurement units before running PCA?",
+    topic: "Scale Sensitivity",
+    options: [
+      "The PCA algorithm will enter an infinite numerical loop and crash.",
+      "The components will be identical to the original features in reverse order.",
+      "The components will be biased heavily toward the features with largest numerical scale.",
+      "The covariance matrix will automatically become an identity matrix."
+    ],
+    ans: 2,
+    exp: "Without scaling, features with large numerical ranges (e.g., area in thousands) dominate variance calculations, blinding PCA to subtle informative features."
+  },
+
+  // Block 7 (Q61-70)
+  {
+    q: "In the context of PCA, what does 'Dimensionality Reduction' achieve that 'Feature Selection' cannot?",
+    topic: "PCA vs Selection",
+    options: [
+      "It retains original feature names so that the model remains 100% interpretable.",
+      "It creates composite directions that combine information from multiple correlated features.",
+      "It eliminates the need for computing covariance matrices during preprocessing.",
+      "It guarantees that linear models will never overfit the training dataset."
+    ],
+    ans: 1,
+    exp: "Feature selection only keeps or drops individual variables, whereas PCA constructs new axes that synthesize information from across multiple correlated features."
+  },
+  {
+    q: "What is the mathematical definition of a Unit Vector ($u$)?",
+    topic: "Mathematical Properties",
+    options: [
+      "A directional vector whose Euclidean norm (length) is strictly equal to 1.",
+      "A vector containing all ones as its internal scalar coordinate elements.",
+      "A matrix whose diagonal entries are all identical to the dataset mean.",
+      "A transformed data sample whose target class label equals exactly one."
+    ],
+    ans: 0,
+    exp: "A unit vector is any vector with a length (Euclidean norm) of 1, ensuring pure directional representation without artificial magnitude scaling."
+  },
+  {
+    q: "What is the geometric meaning of 'Orthogonal' in the context of PCA axes?",
+    topic: "Orthogonality",
+    options: [
+      "The axes are parallel to each other and share the same direction.",
+      "The axes have identical eigenvalues and equal explained variance.",
+      "The axes are mutually perpendicular to each other at a 90-degree angle.",
+      "The axes are non-linear curves that intersect at multiple focal points."
+    ],
+    ans: 2,
+    exp: "Orthogonal axes are perpendicular ($90^\\circ$ angle, dot product = 0), ensuring that each axis represents a completely independent coordinate direction."
+  },
+  {
+    q: "When `n_components=2` is selected for PCA on a dataset with 50 features, what happens to the remaining 48 components?",
+    topic: "Component Selection",
+    options: [
+      "They are stored in memory and used automatically during classification inference.",
+      "They are averaged together to create a third synthetic background feature.",
+      "They are transformed into non-linear kernel dimensions for backup evaluation.",
+      "They are discarded, meaning their captured variance is omitted from the representation."
+    ],
+    ans: 3,
+    exp: "Selecting 2 components discards the remaining 48 lower-variance components, achieving dimensionality reduction by omitting their variance."
+  },
+  {
+    q: "How does PCA help mitigate overfitting in machine learning models trained on high-dimensional data?",
+    topic: "Overfitting Prevention",
+    options: [
+      "By increasing the number of synthetic samples available for model validation.",
+      "By reducing the number of input parameters while filtering out noisy, redundant dimensions.",
+      "By converting non-linear decision boundaries into complex polynomial curves.",
+      "By enforcing strict L1 Lasso penalties directly inside the classifier objective."
+    ],
+    ans: 1,
+    exp: "Fewer input dimensions reduce the capacity of models to memorize noise in high-dimensional spaces, directly combating the curse of dimensionality."
+  },
+  {
+    q: "In the Breast Cancer PCA visualization, why was a Linear Classifier expected to perform well on the 2D projected data?",
+    topic: "Linear Separability",
+    options: [
+      "The 2D projection showed clear, linearly separable clusters between benign and malignant samples.",
+      "PCA converted the dataset from continuous values into binary boolean indicators.",
+      "The projection guaranteed that all test samples had zero classification loss.",
+      "The PCA algorithm optimized the support vector margin during the fit step."
+    ],
+    ans: 0,
+    exp: "The 2D scatter plot showed distinct spatial separation between the two classes, meaning a straight line (linear boundary) can effectively separate them."
+  },
+  {
+    q: "What does each entry $w_{ij}$ in the loading matrix `pca.components_` represent?",
+    topic: "Loadings Interpretation",
+    options: [
+      "The correlation between sample $i$ and sample $j$ in the training set.",
+      "The reconstruction error incurred when sample $i$ is projected onto axis $j$.",
+      "The classification probability that feature $i$ belongs to class $j$.",
+      "The weight/contribution of original feature $j$ in forming principal component $i$."
+    ],
+    ans: 3,
+    exp: "The component loading $w_{ij}$ represents the linear weight of the $j$-th original feature in the linear combination defining the $i$-th principal component."
+  },
+  {
+    q: "If the weights of all original features in PC1 are positive, what happens to the value of PC1 when a sample has higher-than-average feature values?",
+    topic: "Loading Directionality",
+    options: [
+      "The value of PC1 will remain zero because PCA cancels out positive values.",
+      "The value of PC1 will oscillate randomly depending on the random state seed.",
+      "The value of PC1 for that sample will be a large positive number.",
+      "The value of PC1 for that sample will automatically collapse to negative infinity."
+    ],
+    ans: 2,
+    exp: "Since all weights are positive, higher positive centered values in the original features produce a larger positive score along the PC1 axis."
+  },
+  {
+    q: "Why is PCA considered a 'Lossy' compression technique?",
+    topic: "Lossy Compression",
+    options: [
+      "Because it loses the original row index ordering of the training samples.",
+      "Because discarding low-variance components prevents exact reconstruction of the raw data.",
+      "Because it converts double-precision floating numbers into 8-bit integer formats.",
+      "Because it randomly deletes 10% of the training observations to avoid memory overflow."
+    ],
+    ans: 1,
+    exp: "When lower-variance components are omitted, some information is permanently discarded, meaning the original data cannot be reconstructed with 100% fidelity."
+  },
+  {
+    q: "What mathematical property ensures that the sum of explained variance ratios across all possible components equals 1.0?",
+    topic: "Total Variance Preservation",
+    options: [
+      "Total variance is preserved across the full set of orthogonal basis vectors.",
+      "The Scikit-Learn library automatically normalizes the ratios using a softmax function.",
+      "The mean subtraction step forces the variance sum to equal the sample count.",
+      "The unit vector length constraint forces each individual eigenvalue to equal 1.0."
+    ],
+    ans: 0,
+    exp: "Orthogonal rotation preserves the total trace (sum of variances) of the covariance matrix; thus, considering all components accounts for 100% of the variance."
+  },
+
+  // Block 8 (Q71-80)
+  {
+    q: "How does the computational complexity of training distance-based models scale when reducing features from 5,655 pixels to 50 PCA components?",
+    topic: "Computational Efficiency",
+    options: [
+      "Complexity increases because calculating PCA projections requires extra neural steps.",
+      "Complexity remains identical because the number of training samples is unchanged.",
+      "Complexity scales with the square of the original pixel resolution ($87^2 \\times 65^2$).",
+      "Complexity decreases drastically because distance calculations evaluate only 50 dimensions."
+    ],
+    ans: 3,
+    exp: "Distance calculations scale linearly with dimension count $\\mathcal{O}(D)$; dropping from 5,655 to 50 dimensions yields over a 100-fold reduction in distance computation time."
+  },
+  {
+    q: "What does an explained variance curve ('elbow plot' or scree plot) typically help a practitioner decide?",
+    topic: "Scree Plot Intuition",
+    options: [
+      "The optimal learning rate for training a stochastic gradient descent classifier.",
+      "The number of folds required for stratified k-fold cross-validation.",
+      "The optimal number of principal components to retain for dimensionality reduction.",
+      "The precise decision threshold required for binary logistic classification."
+    ],
+    ans: 2,
+    exp: "A scree plot shows the variance explained by each component; the 'elbow' point indicates where adding more components yields diminishing returns."
+  },
+  {
+    q: "Why does PCA fail to produce meaningful components when applied to purely categorical one-hot encoded variables?",
+    topic: "Data Type Limitations",
+    options: [
+      "One-hot encoded vectors contain only 0s and 1s, which lack continuous linear variance.",
+      "Scikit-Learn explicitly raises a TypeError whenever binary inputs are passed into `fit`.",
+      "Categorical variables cannot be stored in 2D NumPy arrays or Pandas DataFrames.",
+      "One-hot encoding automatically scales all feature variances to negative infinity."
+    ],
+    ans: 0,
+    exp: "PCA assumes continuous numeric data with linear geometric relationships. Discrete binary (0/1) variables do not follow continuous Gaussian-like geometry."
+  },
+  {
+    q: "In Scikit-Learn, what is the effect of setting `PCA(n_components=0.95)` with a float between 0 and 1?",
+    topic: "Scikit-Learn Hyperparameters",
+    options: [
+      "It automatically selects enough components to retain at least 95% of total variance.",
+      "It drops 95% of all input samples at random to speed up model convergence.",
+      "It rescales the first component's eigenvalue so that its magnitude equals 0.95.",
+      "It sets the maximum reconstruction error threshold to strictly 0.05 millimeters."
+    ],
+    ans: 0,
+    exp: "When a float in $(0, 1)$ is passed to `n_components`, Scikit-Learn selects the minimum number of components required to explain that fraction of total variance."
+  },
+  {
+    q: "What happens if you fit a PCA model on training data and then transform test data without using the training parameters?",
+    topic: "Data Leakage & Best Practices",
+    options: [
+      "The test predictions will automatically improve due to independent standardization.",
+      "The test data must be transformed using the training mean and components to avoid mismatch.",
+      "PCA will automatically retrain its components on the test set during `transform()`.",
+      "The test data will be converted into a zero matrix with no extractable variance."
+    ],
+    ans: 1,
+    exp: "To maintain valid evaluation and prevent data leakage, test data must be centered and projected using the mean and eigenvectors learned strictly from the training set."
+  },
+  {
+    q: "Why are the Principal Components generated by PCA guaranteed to be uncorrelated, but not necessarily statistically independent?",
+    topic: "Uncorrelated vs Independent",
+    options: [
+      "Because PCA is a supervised algorithm that incorporates class labels into the covariance.",
+      "Because zero covariance only guarantees linear independence, not non-linear independence.",
+      "Because statistical independence requires all eigenvalues to be negative numbers.",
+      "Because Scikit-Learn uses an approximate stochastic solver rather than exact SVD."
+    ],
+    ans: 1,
+    exp: "Zero covariance implies no linear relationship. Non-linear dependencies can still exist between uncorrelated components unless the data is jointly Gaussian."
+  },
+  {
+    q: "What does the term 'Eigenface' specifically refer to in the face recognition literature?",
+    topic: "Eigenface Definition",
+    options: [
+      "A principal component eigenvector reshaped into the 2D dimensions of a facial image.",
+      "A specialized convolutional filter trained using deep supervised backpropagation.",
+      "A synthetic facial image generated by averaging the top three target identities.",
+      "A facial landmark detector that locates the spatial coordinates of the eyes and nose."
+    ],
+    ans: 0,
+    exp: "An Eigenface is simply an eigenvector derived from the covariance matrix of facial images, reshaped back to the original image dimensions for visualization."
+  },
+  {
+    q: "In the 2D toy example with correlated features, why did the direction of maximum variance lie along the diagonal rather than either original axis?",
+    topic: "Geometric Intuition",
+    options: [
+      "Because Scikit-Learn randomly rotates data axes by 45 degrees during initialization.",
+      "Because the joint variation of the correlated variables created an elongated diagonal spread.",
+      "Because the feature variances were forced to zero by the standard scaler step.",
+      "Because distance calculations in 2D space require all axes to intersect diagonally."
+    ],
+    ans: 1,
+    exp: "When two features are positively correlated, points spread out along the diagonal line $y = x$, making the diagonal the axis of maximum variance."
+  },
+  {
+    q: "What is the primary computational step required to calculate Principal Components mathematically from centered data?",
+    topic: "Mathematical Foundations",
+    options: [
+      "Calculating the inverse of the target label matrix using stochastic gradient descent.",
+      "Training a multilayer perceptron with a linear bottleneck layer in the center.",
+      "Computing the decision tree splits that maximize the Gini information gain metric.",
+      "Performing Eigendecomposition or Singular Value Decomposition (SVD) on the covariance matrix."
+    ],
+    ans: 3,
+    exp: "PCA is mathematically solved by computing the eigenvectors of the sample covariance matrix, typically implemented via Singular Value Decomposition (SVD)."
+  },
+  {
+    q: "What is the key difference between Principal Component Analysis (PCA) and Kernel PCA?",
+    topic: "Kernel PCA Comparison",
+    options: [
+      "PCA is an unsupervised method, whereas Kernel PCA is strictly a supervised classifier.",
+      "PCA uses linear orthogonal projections, while Kernel PCA uses non-linear kernel transformations.",
+      "PCA can only process 2D data, whereas Kernel PCA can handle up to 30 dimensions.",
+      "PCA requires one-hot encoded variables, whereas Kernel PCA requires continuous floats."
+    ],
+    ans: 1,
+    exp: "Standard PCA is restricted to linear transformations; Kernel PCA uses the kernel trick to map data into high-dimensional feature spaces for non-linear dimensionality reduction."
+  },
+
+  // Block 9 (Q81-90)
+  {
+    q: "Why is PCA often utilized as an initial Preprocessing step before training clustering algorithms (such as K-Means)?",
+    topic: "PCA in ML Pipelines",
+    options: [
+      "It mitigates the curse of dimensionality, removes correlation, and speeds up distance calculations.",
+      "It converts unsupervised clustering problems into fully supervised classification tasks.",
+      "It automatically determines the exact optimal number of clusters ($k$) in advance.",
+      "It eliminates the need for initializing cluster centroids during the fitting process."
+    ],
+    ans: 0,
+    exp: "K-Means relies on Euclidean distance, which struggles in high dimensions. PCA removes noise, reduces dimensions, and decorrelates features to improve clustering."
+  },
+  {
+    q: "If an input dataset contains $n = 100$ samples and $p = 500$ features, what is the maximum number of non-zero variance components PCA can extract?",
+    topic: "Rank Constraints",
+    options: [
+      "Exactly 500 components, equal to the number of input feature columns.",
+      "At most 99 components, constrained by the sample degrees of freedom ($n - 1$).",
+      "Exactly 1 component, because $p$ is strictly greater than the sample size $n$.",
+      "Infinite components, because SVD can synthesize arbitrary orthogonal axes."
+    ],
+    ans: 1,
+    exp: "The rank of the centered data matrix is at most $\\min(n-1, p)$. With $n=100$, PCA can extract at most 99 non-zero principal components."
+  },
+  {
+    q: "What does a negative loading weight for a feature in a principal component imply?",
+    topic: "Loading Interpretation",
+    options: [
+      "The feature is completely uninformative and must be deleted from the dataset.",
+      "The feature has negative variance, which violates the assumptions of PCA.",
+      "The feature value is multiplied by zero during the dimensionality reduction step.",
+      "The feature's value contributes inversely (negatively) to the score on that component."
+    ],
+    ans: 3,
+    exp: "A negative weight means that higher values in that feature decrease the sample's score along that component axis, indicating an inverse relationship."
+  },
+  {
+    q: "Why does the first principal component always capture the largest possible variance among all possible linear directions?",
+    topic: "Optimization Formulation",
+    options: [
+      "Because Scikit-Learn automatically normalizes all other components to have zero spread.",
+      "Because it is mathematically defined as the eigenvector corresponding to the largest eigenvalue.",
+      "Because it is constrained to align with the original feature having the highest mean.",
+      "Because it incorporates supervised class labels to maximize the between-class variance."
+    ],
+    ans: 1,
+    exp: "By mathematical formulation, $PC_1$ corresponds to the principal eigenvector with the maximum eigenvalue of the covariance matrix."
+  },
+  {
+    q: "How does PCA handle missing values (NaNs) present in the input feature matrix?",
+    topic: "Practical Limitations",
+    options: [
+      "Standard PCA cannot handle missing values and requires prior data imputation.",
+      "PCA automatically replaces all missing values with the median of that column.",
+      "PCA treats NaNs as orthogonal zero vectors and processes them seamlessly.",
+      "PCA converts missing entries into a separate categorical dummy component."
+    ],
+    ans: 0,
+    exp: "Standard mathematical PCA operations (covariance, SVD) cannot compute on missing data; missing entries must be imputed before applying PCA."
+  },
+  {
+    q: "What is the relationship between the orientation of Principal Component axes and the original coordinate axes?",
+    topic: "Coordinate Transformation",
+    options: [
+      "Principal component axes must always run parallel to the original coordinate axes.",
+      "Principal component axes represent a rotated frame of reference tailored to data spread.",
+      "Principal component axes are always fixed at an exact 45-degree angle to original axes.",
+      "Principal component axes are non-linear curves that intersect the original origin."
+    ],
+    ans: 1,
+    exp: "Principal components form a rotated coordinate system where axes align with the intrinsic directions of maximum variance rather than original coordinate axes."
+  },
+  {
+    q: "In the 2D to 1D projection example, what does each point on the final 1D line represent?",
+    topic: "Projection Representation",
+    options: [
+      "The exact classification label assigned to that sample by a decision tree.",
+      "The residual reconstruction error incurred by ignoring the dataset mean.",
+      "The single scalar coordinate along the first principal component axis ($PC_1$).",
+      "The original uncentered value of Feature 1 prior to standardization."
+    ],
+    ans: 2,
+    exp: "Projecting 2D data onto $PC_1$ compresses each 2D point $(x_1, x_2)$ into a single scalar coordinate value representing its position along the $PC_1$ axis."
+  },
+  {
+    q: "Why is PCA an effective tool for Exploratory Data Analysis (EDA)?",
+    topic: "Exploratory Data Analysis",
+    options: [
+      "It automatically imputes missing values and removes all duplicate records.",
+      "It proves causal relationships between independent features and target labels.",
+      "It generates supervised decision rules that can be printed as if-then logic.",
+      "It allows high-dimensional data to be visualized in 2D or 3D scatter plots."
+    ],
+    ans: 3,
+    exp: "PCA enables practitioners to compress complex high-dimensional datasets into 2D or 3D plots to visually inspect clusters, trends, and outliers."
+  },
+  {
+    q: "What happens to the total variance of a dataset during an orthogonal PCA transformation without dropping any components?",
+    topic: "Variance Conservation",
+    options: [
+      "Total variance is perfectly conserved; the sum of individual component variances equals the original sum.",
+      "Total variance drops to zero because all off-diagonal covariance entries are eliminated.",
+      "Total variance increases exponentially due to the eigenvalue multiplication factor.",
+      "Total variance is halved because the coordinate axes are rotated by 90 degrees."
+    ],
+    ans: 0,
+    exp: "Orthogonal rotation preserves the total trace of the covariance matrix, meaning total variance is strictly conserved when all components are retained."
+  },
+  {
+    q: "Which of the following describes the 'Back-rotation' formula in matrix notation (where $X_{\\text{pca}}$ is projected data and $V$ contains eigenvectors)?",
+    topic: "Inverse Transformation Formula",
+    options: [
+      "$\\hat{X} = X_{\\text{pca}} / V + \\text{mean}$",
+      "$\\hat{X} = X_{\\text{pca}} V^T + \\text{mean}$",
+      "$\\hat{X} = X_{\\text{pca}}^T V - \\text{mean}$",
+      "$\\hat{X} = V X_{\\text{pca}} \\times \\text{mean}$"
+    ],
+    ans: 1,
+    exp: "Reconstructing the original data involves multiplying the low-dimensional projection $X_{\\text{pca}}$ by the transpose of the loading matrix $V^T$ and adding back the mean."
+  },
+
+  // Block 10 (Q91-100)
+  {
+    q: "Why does PCA struggle when applied to datasets with extreme outliers?",
+    topic: "Outlier Sensitivity",
+    options: [
+      "Outliers cause Scikit-Learn to automatically set all eigenvalues to zero.",
+      "Outliers force the covariance matrix to become non-invertible and singular.",
+      "Variance is heavily influenced by squared distances, so outliers skew the principal axes.",
+      "Outliers convert continuous floating-point variables into discrete categories."
+    ],
+    ans: 2,
+    exp: "Because variance is based on squared deviations from the mean, extreme outliers disproportionately pull and rotate the principal component axes."
+  },
+  {
+    q: "In Scikit-Learn's PCA implementation, what does the method `pca.fit_transform(X)` perform?",
+    topic: "Scikit-Learn API",
+    options: [
+      "It computes the mean and components on $X$, then immediately returns the projected coordinates.",
+      "It fits a decision tree on $X$ and transforms the target labels into one-hot vectors.",
+      "It scales $X$ to unit variance and removes all outliers beyond three standard deviations.",
+      "It trains a supervised classifier on $X$ and evaluates its cross-validation accuracy."
+    ],
+    ans: 0,
+    exp: "`fit_transform(X)` combines both steps: estimating the mean and principal components (`fit`), and projecting the data into the lower-dimensional space (`transform`)."
+  },
+  {
+    q: "What does the Second Principal Component ($PC_2$) represent geometrically relative to $PC_1$?",
+    topic: "Second Component Properties",
+    options: [
+      "The orthogonal direction perpendicular to $PC_1$ that captures the next highest variance.",
+      "A parallel line running alongside $PC_1$ with identical explained variance.",
+      "A non-linear curved manifold that wraps around the centroid of $PC_1$.",
+      "The axis that minimizes total variance and maximizes reconstruction error."
+    ],
+    ans: 0,
+    exp: "$PC_2$ is constrained to be strictly orthogonal (perpendicular) to $PC_1$ while capturing the maximum possible remaining variance."
+  },
+  {
+    q: "Why is it invalid to evaluate PCA by measuring its 'classification accuracy' directly?",
+    topic: "PCA Evaluation",
+    options: [
+      "Because PCA accuracy cannot be computed without using GPU parallelization.",
+      "Because PCA is a dimensionality reduction tool, not a predictive classification model.",
+      "Because PCA always produces an accuracy score of exactly 1.0 on training sets.",
+      "Because Scikit-Learn prevents calling `.score()` on unsupervised estimators."
+    ],
+    ans: 1,
+    exp: "PCA is an unsupervised feature transformer, not a classifier. It is evaluated by explained variance ratio or downstream model performance."
+  },
+  {
+    q: "When two features are negatively correlated (e.g., $r = -0.95$), how will the first principal component orient itself?",
+    topic: "Negative Correlation",
+    options: [
+      "Directly along the vertical y-axis with zero horizontal inclination.",
+      "In a circular loop centered at the coordinate intersection origin.",
+      "Along the downward-sloping diagonal direction from top-left to bottom-right.",
+      "Along the upward-sloping diagonal direction from bottom-left to top-right."
+    ],
+    ans: 2,
+    exp: "Negative correlation causes data to spread along a downward diagonal ($y \\approx -x$); $PC_1$ aligns with this maximal spread direction."
+  },
+  {
+    q: "In an applied machine learning pipeline, where should `StandardScaler` and `PCA` be placed relative to cross-validation folds?",
+    topic: "ML Pipeline Design",
+    options: [
+      "Fit on the entire dataset before splitting into cross-validation folds.",
+      "Fit only on the test fold and transform the training fold backwards.",
+      "Fit on the target label vector and transform the input feature matrix.",
+      "Fit strictly on the training fold, then transform both training and validation folds."
+    ],
+    ans: 3,
+    exp: "To avoid data leakage, scalers and PCA must be fitted exclusively on training folds, then used to transform validation/test folds."
+  },
+  {
+    q: "What is the primary trade-off when deciding how many Principal Components to retain in a machine learning workflow?",
+    topic: "Dimensionality Trade-off",
+    options: [
+      "Training speed versus the memory capacity of the graphics card (VRAM).",
+      "Dimensionality reduction (compression & speed) versus information retention (explained variance).",
+      "The number of classes in the target variable versus the batch training size.",
+      "L1 regularization strength versus the polynomial degree of the decision boundary."
+    ],
+    ans: 1,
+    exp: "Retaining fewer components yields greater compression and speed but increases information loss; keeping more preserves variance but retains complexity."
+  },
+  {
+    q: "How does PCA facilitate the identification of multivariate outliers in complex datasets?",
+    topic: "Outlier Detection",
+    options: [
+      "Samples with unusually high reconstruction errors or extreme component scores stand out.",
+      "PCA automatically deletes any observation that lies more than 1 unit from the mean.",
+      "PCA converts all outlier coordinates into negative infinite floating values.",
+      "PCA shifts normal observations to the origin and deletes outlier data points."
+    ],
+    ans: 0,
+    exp: "Outliers that deviate from regular correlation structures produce extreme projection coordinates or high reconstruction errors when mapped back."
+  },
+  {
+    q: "What is the primary geometric reason why distance-based models perform poorly in unreduced 5,655-dimensional image spaces?",
+    topic: "High-D Geometry",
+    options: [
+      "High-dimensional spaces cause matrix multiplication algorithms to fail numerically.",
+      "The angle between any two image vectors is forced to be exactly zero degrees.",
+      "Data becomes extremely sparse and all pairwise distances become nearly identical.",
+      "All pixel values collapse into a single cluster centered at coordinate $(0,0)$."
+    ],
+    ans: 2,
+    exp: "In thousands of dimensions, data sparsity is extreme and the contrast between nearest and farthest neighbors vanishes, degrading distance metrics."
+  },
+  {
+    q: "Which summary statement best captures the core mechanism of Principal Component Analysis?",
+    topic: "PCA Summary",
+    options: [
+      "A non-linear clustering algorithm that iteratively assigns samples to $k$ nearest centroids.",
+      "A supervised optimization that adjusts hyperplane weights to maximize class margins.",
+      "A tree-based ensemble method that builds decorrelated decision trees on feature subsets.",
+      "An orthogonal linear transformation that rotates data to align axes with maximal variance."
+    ],
+    ans: 3,
+    exp: "PCA is fundamentally an unsupervised linear orthogonal transformation that rotates axes to align with directions of maximum variance, eliminating correlation."
+  }
+];
+
+let userAnswers = new Array(rawQuestions.length).fill(null);
+
+function renderQuiz() {
+  const container = document.getElementById('quizContainer');
+  container.innerHTML = '';
+
+  rawQuestions.forEach((item, qIdx) => {
+    const card = document.createElement('div');
+    card.className = 'question-card';
+    card.id = `qCard_${qIdx}`;
+
+    const cardHeader = document.createElement('div');
+    cardHeader.className = 'card-header';
+    cardHeader.innerHTML = `
+      <span class="q-badge">Question ${qIdx + 1} of ${rawQuestions.length}</span>
+      <span class="q-topic">${item.topic}</span>
+    `;
+
+    const qText = document.createElement('div');
+    qText.className = 'q-text';
+    qText.textContent = item.q;
+
+    const choicesGrid = document.createElement('div');
+    choicesGrid.className = 'choices-grid';
+
+    const prefixes = ['A', 'B', 'C', 'D'];
+
+    item.options.forEach((optText, optIdx) => {
+      const btn = document.createElement('button');
+      btn.className = 'choice-btn';
+      btn.id = `q${qIdx}_opt${optIdx}`;
+      btn.onclick = () => selectAnswer(qIdx, optIdx);
+
+      btn.innerHTML = `
+        <span class="choice-prefix">${prefixes[optIdx]}</span>
+        <span>${optText}</span>
+      `;
+
+      choicesGrid.appendChild(btn);
+    });
+
+    const expCard = document.createElement('div');
+    expCard.className = 'explanation-card';
+    expCard.id = `exp_${qIdx}`;
+    expCard.innerHTML = `<strong>Theoretical Explanation:</strong> ${item.exp}`;
+
+    card.appendChild(cardHeader);
+    card.appendChild(qText);
+    card.appendChild(choicesGrid);
+    card.appendChild(expCard);
+    container.appendChild(card);
+  });
+}
+
+function selectAnswer(qIdx, selectedOptIdx) {
+  if (userAnswers[qIdx] !== null) return; // Prevent changing after lock
+
+  userAnswers[qIdx] = selectedOptIdx;
+  const qData = rawQuestions[qIdx];
+  const isCorrect = (selectedOptIdx === qData.ans);
+
+  // Update choice buttons
+  for (let i = 0; i < 4; i++) {
+    const btn = document.getElementById(`q${qIdx}_opt${i}`);
+    btn.disabled = true;
+
+    if (i === qData.ans) {
+      btn.classList.add('correct-choice');
+    } else if (i === selectedOptIdx) {
+      btn.classList.add('incorrect-choice');
+    } else {
+      btn.classList.add('dimmed');
+    }
+  }
+
+  // Display explanation box
+  const expBox = document.getElementById(`exp_${qIdx}`);
+  if (expBox) {
+    expBox.style.display = 'block';
+  }
+
+  updateDashboard();
+}
+
+function updateDashboard() {
+  let answered = 0;
+  let correct = 0;
+
+  userAnswers.forEach((ans, idx) => {
+    if (ans !== null) {
+      answered++;
+      if (ans === rawQuestions[idx].ans) {
+        correct++;
+      }
+    }
+  });
+
+  document.getElementById('answeredCount').textContent = `${answered} / ${rawQuestions.length}`;
+  document.getElementById('scoreVal').textContent = `${correct}`;
+
+  const accuracy = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+  document.getElementById('accVal').textContent = `${accuracy}%`;
+
+  const progressPct = (answered / rawQuestions.length) * 100;
+  document.getElementById('progressBar').style.width = `${progressPct}%`;
+}
+
+function resetQuiz() {
+  if (confirm("Are you sure you want to reset all answers and restart the exam?")) {
+    userAnswers = new Array(rawQuestions.length).fill(null);
+    renderQuiz();
+    updateDashboard();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+// Initial render
+window.onload = () => {
+  renderQuiz();
+  updateDashboard();
+};
+</script>
+</body>
+</html> 
