@@ -1,1403 +1,1655 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Software Architecture - Interactive Practice Exam (60 Questions)</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --card-border: #334155;
-            --primary: #38bdf8;
-            --primary-hover: #0284c7;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --correct-bg: rgba(34, 197, 94, 0.15);
-            --correct-border: #22c55e;
-            --correct-text: #4ade80;
-            --wrong-bg: rgba(239, 68, 68, 0.15);
-            --wrong-border: #ef4444;
-            --wrong-text: #f87171;
-            --accent-purple: #c084fc;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>بنك الأسئلة الوزاري الشامل (100 سؤال) - الوحدة الأولى (التربية الإسلامية - الصف الحادي عشر)</title>
+  <style>
+    :root {
+      --primary: #0f766e;
+      --primary-dark: #115e59;
+      --primary-light: #ccfbf1;
+      --accent: #d97706;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --correct: #16a34a;
+      --correct-bg: #dcfce7;
+      --wrong: #dc2626;
+      --wrong-bg: #fee2e2;
+      --radius: 12px;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+    }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans Arabic", sans-serif;
+    }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            line-height: 1.6;
-            padding-bottom: 60px;
-        }
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding-bottom: 80px;
+    }
 
-        /* Header & Dashboard */
-        header {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            border-bottom: 1px solid var(--card-border);
-            padding: 2rem 1rem;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(12px);
-        }
+    header {
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      color: white;
+      padding: 2rem 1rem;
+      text-align: center;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
 
-        .header-container {
-            max-width: 1100px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 1.2rem;
-        }
+    header h1 {
+      font-size: 1.6rem;
+      margin-bottom: 0.5rem;
+      font-weight: 800;
+    }
 
-        .title-area {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
+    header p {
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
 
-        .title-area h1 {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-        }
+    .sticky-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 1rem;
+      box-shadow: var(--shadow);
+    }
 
-        .subtitle {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
+    .controls-container {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
 
-        .stats-bar {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 1rem;
-        }
+    .mode-switch {
+      display: flex;
+      background: #e2e8f0;
+      padding: 4px;
+      border-radius: 30px;
+    }
 
-        .stat-card {
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid var(--card-border);
-            border-radius: 10px;
-            padding: 0.8rem 1rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
+    .mode-btn {
+      border: none;
+      background: transparent;
+      padding: 8px 18px;
+      border-radius: 25px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.2s ease;
+    }
 
-        .stat-value {
-            font-size: 1.4rem;
-            font-weight: 700;
-            font-family: 'Fira Code', monospace;
-        }
+    .mode-btn.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
 
-        .stat-label {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+    .stats-panel {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
 
-        .progress-container {
-            width: 100%;
-            height: 8px;
-            background-color: var(--card-border);
-            border-radius: 4px;
-            overflow: hidden;
-        }
+    .timer-badge {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fde68a;
+      padding: 6px 14px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
 
-        .progress-bar {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #38bdf8, #818cf8, #22c55e);
-            transition: width 0.3s ease;
-        }
+    .score-badge {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      padding: 6px 14px;
+      border-radius: 20px;
+    }
 
-        /* Controls & Filters */
-        .controls-container {
-            max-width: 1100px;
-            margin: 1.5rem auto;
-            padding: 0 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
+    .container {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
 
-        .filter-buttons {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
+    .result-banner {
+      background: white;
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      border: 2px solid var(--primary);
+      box-shadow: var(--shadow);
+      display: none;
+    }
 
-        .btn {
-            background-color: var(--card-bg);
-            color: var(--text-main);
-            border: 1px solid var(--card-border);
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
+    .result-banner h2 {
+      color: var(--primary-dark);
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
 
-        .btn:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
+    .result-score {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin: 0.5rem 0;
+    }
 
-        .btn.active {
-            background-color: var(--primary);
-            color: #0f172a;
-            border-color: var(--primary);
-            font-weight: 600;
-        }
+    .question-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      transition: transform 0.2s ease;
+    }
 
-        .btn-reset {
-            background-color: rgba(239, 68, 68, 0.1);
-            color: var(--wrong-text);
-            border-color: var(--wrong-border);
-        }
+    .q-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+      gap: 10px;
+    }
 
-        .btn-reset:hover {
-            background-color: var(--wrong-border);
-            color: #fff;
-        }
+    .q-number {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      font-size: 0.85rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 8px;
+      white-space: nowrap;
+    }
 
-        /* Main Exam Layout */
-        main {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
+    .q-text {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+      flex-grow: 1;
+    }
 
-        /* Question Card */
-        .question-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 14px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s ease, border-color 0.2s ease;
-        }
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 1rem;
+    }
 
-        .question-card:hover {
-            border-color: #475569;
-        }
+    .option-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      background: #f8fafc;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.95rem;
+      user-select: none;
+    }
 
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-            padding-bottom: 0.8rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
+    .option-item:hover:not(.disabled) {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+    }
 
-        .q-number {
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: var(--primary);
-            font-family: 'Fira Code', monospace;
-        }
+    .option-item.selected {
+      background: #f0fdfa;
+      border-color: var(--primary);
+      font-weight: 700;
+    }
 
-        .slide-badge {
-            background-color: rgba(192, 132, 252, 0.15);
-            color: var(--accent-purple);
-            border: 1px solid rgba(192, 132, 252, 0.3);
-            font-size: 0.75rem;
-            font-weight: 600;
-            padding: 0.2rem 0.6rem;
-            border-radius: 20px;
-        }
+    .option-item.correct {
+      background: var(--correct-bg) !important;
+      border-color: var(--correct) !important;
+      color: #14532d !important;
+      font-weight: 700;
+    }
 
-        .question-text {
-            font-size: 1.05rem;
-            font-weight: 500;
-            color: var(--text-main);
-            margin-bottom: 1.2rem;
-            line-height: 1.5;
-        }
+    .option-item.wrong {
+      background: var(--wrong-bg) !important;
+      border-color: var(--wrong) !important;
+      color: #7f1d1d !important;
+      font-weight: 700;
+    }
 
-        /* Options */
-        .options-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 0.7rem;
-        }
+    .option-item.disabled {
+      cursor: default;
+    }
 
-        .option-btn {
-            background-color: rgba(15, 23, 42, 0.5);
-            border: 1px solid var(--card-border);
-            border-radius: 10px;
-            padding: 0.9rem 1.1rem;
-            text-align: left;
-            color: var(--text-main);
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: flex-start;
-            gap: 0.8rem;
-            width: 100%;
-        }
+    .opt-letter {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: white;
+      border: 1px solid #cbd5e1;
+      margin-left: 10px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
 
-        .option-btn:hover:not(:disabled) {
-            background-color: rgba(56, 189, 248, 0.1);
-            border-color: var(--primary);
-            transform: translateX(4px);
-        }
+    .explanation-box {
+      margin-top: 1rem;
+      padding: 12px;
+      background: #f1f5f9;
+      border-right: 4px solid var(--primary);
+      border-radius: 6px;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      display: none;
+    }
 
-        .option-prefix {
-            font-weight: 700;
-            font-family: 'Fira Code', monospace;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 6px;
-            padding: 0.1rem 0.5rem;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            flex-shrink: 0;
-        }
+    .submit-container {
+      text-align: center;
+      margin-top: 2rem;
+    }
 
-        .option-text {
-            flex-grow: 1;
-        }
+    .submit-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 14px 40px;
+      border-radius: 30px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(15, 118, 110, 0.3);
+      transition: all 0.2s ease;
+    }
 
-        /* States after answering */
-        .option-btn.correct {
-            background-color: var(--correct-bg) !important;
-            border-color: var(--correct-border) !important;
-            color: var(--correct-text) !important;
-            font-weight: 600;
-        }
+    .submit-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
 
-        .option-btn.correct .option-prefix {
-            background-color: var(--correct-border);
-            color: #0f172a;
-        }
-
-        .option-btn.wrong {
-            background-color: var(--wrong-bg) !important;
-            border-color: var(--wrong-border) !important;
-            color: var(--wrong-text) !important;
-        }
-
-        .option-btn.wrong .option-prefix {
-            background-color: var(--wrong-border);
-            color: #ffffff;
-        }
-
-        .option-btn:disabled {
-            cursor: default;
-            opacity: 0.85;
-        }
-
-        /* Explanation box */
-        .explanation-box {
-            margin-top: 1rem;
-            padding: 1rem;
-            background-color: rgba(15, 23, 42, 0.8);
-            border-left: 4px solid var(--primary);
-            border-radius: 6px;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            display: none;
-            animation: fadeIn 0.3s ease-in;
-        }
-
-        .explanation-box strong {
-            color: var(--primary);
-            display: block;
-            margin-bottom: 0.3rem;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Responsive */
-        @media (max-width: 640px) {
-            header {
-                padding: 1rem;
-            }
-            .title-area h1 {
-                font-size: 1.2rem;
-            }
-            .stats-bar {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .question-card {
-                padding: 1rem;
-            }
-            .option-btn {
-                padding: 0.75rem 0.9rem;
-                font-size: 0.88rem;
-            }
-        }
-    </style>
+    @media (max-width: 640px) {
+      .controls-container {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .stats-panel {
+        justify-content: space-between;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<header>
-    <div class="header-container">
-        <div class="title-area">
-            <div>
-                <h1><i class="fa-solid fa-graduation-cap"></i> Software Architecture Practice Exam</h1>
-                <p class="subtitle">Chapter 4 | 60 Comprehensive MCQs covering Slide 1 to Slide 51</p>
-            </div>
-        </div>
+  <header>
+    <h1>المكثف الوزاري الشامل (100 سؤال اختيار من متعدد)</h1>
+    <p>الوحدة الأولى: ﴿وَاعْتَصِمُوا بِحَبْلِ اللَّهِ جَمِيعًا﴾ — مبحث التربية الإسلامية (الصف الحادي عشر)</p>
+  </header>
 
-        <div class="stats-bar">
-            <div class="stat-card">
-                <span class="stat-value" id="score-val" style="color: var(--primary);">0 / 60</span>
-                <span class="stat-label">Score</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-value" id="progress-val" style="color: var(--accent-purple);">0%</span>
-                <span class="stat-label">Progress</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-value" id="correct-val" style="color: var(--correct-text);">0</span>
-                <span class="stat-label">Correct</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-value" id="wrong-val" style="color: var(--wrong-text);">0</span>
-                <span class="stat-label">Incorrect</span>
-            </div>
-        </div>
+  <div class="sticky-bar">
+    <div class="controls-container">
+      <div class="mode-switch">
+        <button id="examModeBtn" class="mode-btn active" onclick="setMode('exam')">وضع الامتحان (35 دقيقة)</button>
+        <button id="practiceModeBtn" class="mode-btn" onclick="setMode('practice')">وضع التدريب (تصحيح فوري)</button>
+      </div>
 
-        <div class="progress-container">
-            <div class="progress-bar" id="p-bar"></div>
+      <div class="stats-panel">
+        <div id="timerBadge" class="timer-badge">
+          ⏱️ الوقت المتبقي: <span id="timerDisplay">35:00</span>
         </div>
+        <div id="scoreBadge" class="score-badge" style="display:none;">
+          🎯 النتيجة المباشرة: <span id="liveScore">0 / 0 (0%)</span>
+        </div>
+      </div>
     </div>
-</header>
+  </div>
 
-<div class="controls-container">
-    <div class="filter-buttons">
-        <button class="btn active" onclick="filterQuestions('all')"><i class="fa-solid fa-list"></i> All (60)</button>
-        <button class="btn" onclick="filterQuestions('unanswered')"><i class="fa-regular fa-circle"></i> Unanswered</button>
-        <button class="btn" onclick="filterQuestions('correct')"><i class="fa-solid fa-check"></i> Correct</button>
-        <button class="btn" onclick="filterQuestions('wrong')"><i class="fa-solid fa-xmark"></i> Incorrect</button>
+  <div class="container">
+    <div id="resultBanner" class="result-banner">
+      <h2>انتهى الامتحان! تقرير النتيجة النهائية</h2>
+      <div class="result-score" id="finalScoreDisplay">0 / 100</div>
+      <p id="finalScorePercent" style="font-weight: 700; color: var(--text-muted);"></p>
+      <p style="margin-top: 10px; font-size: 0.9rem;">تم فتح مراجعة الإجابات أدناه مع الإيضاحات الوزارية لكل سؤال.</p>
     </div>
-    <button class="btn btn-reset" onclick="resetQuiz()"><i class="fa-solid fa-rotate-right"></i> Reset Exam</button>
-</div>
 
-<main id="quiz-container">
-    <!-- Questions will be rendered dynamically by JavaScript -->
-</main>
+    <div id="questionsList"></div>
 
-<script>
-    const examData = [
-        // Slide 1
-        {
-            slide: "Slide 1",
-            question: "Which aspect of software architectural design involves deciding how the software is divided into components?",
-            options: [
-                "Server organization",
-                "Software decomposition",
-                "Database indexing",
-                "User interface styling"
-            ],
-            answer: 1,
-            explanation: "Slide 1 states that architectural design includes overall organization, software decomposition into components, server organization, and technologies used."
-        },
-        {
-            slide: "Slide 1",
-            question: "When software architecture is interpreted as a 'verb', what does it refer to?",
-            options: [
-                "The physical deployment of servers",
-                "The static code structure of a system",
-                "The process of defining system structures",
-                "The execution of unit tests"
-            ],
-            answer: 2,
-            explanation: "Slide 1 explains that some focus on architecture as a noun (the structure) and others as a verb (the process of defining these structures)."
-        },
-        // Slide 2 & 3
-        {
-            slide: "Slide 2-3",
-            question: "According to the IEEE definition, software architecture is embodied in all of the following EXCEPT:",
-            options: [
-                "Its components and their relationships to each other",
-                "Its relationship to the environment",
-                "The exact source code algorithmic details inside methods",
-                "The principles guiding its design and evolution"
-            ],
-            answer: 2,
-            explanation: "Table 4.1 (IEEE definition) defines architecture as the fundamental organization embodied in components, relationships, environment, and principles, not internal low-level code algorithms."
-        },
-        {
-            slide: "Slide 2-3",
-            question: "According to Table 4.1, what provides guidance for a software system's design and evolution?",
-            options: [
-                "Architectural principles",
-                "Operating system kernels",
-                "Marketing strategies",
-                "Database triggers"
-            ],
-            answer: 0,
-            explanation: "IEEE definition specifies 'principles guiding its design and evolution' as a foundational part of software architecture."
-        },
-        // Slide 4
-        {
-            slide: "Slide 4",
-            question: "What is a software component in architectural terms?",
-            options: [
-                "A hardware rack in a data center",
-                "An element that implements a coherent set of functionality or features",
-                "A single line of executable code",
-                "A network router protocol"
-            ],
-            answer: 1,
-            explanation: "Slide 4 defines a component as an element that implements a coherent set of functionality or features and acts as a collection of services."
-        },
-        {
-            slide: "Slide 4",
-            question: "When designing software architecture, what should architects focus on regarding components?",
-            options: [
-                "Writing internal algorithm code",
-                "Designing the component interface and leaving implementation for later",
-                "Optimizing database SQL queries",
-                "Designing graphical UI buttons"
-            ],
-            answer: 1,
-            explanation: "Slide 4 states: 'you don’t have to decide how an element is implemented. Rather, you design the component interface and leave implementation to a later stage.'"
-        },
-        // Slide 5
-        {
-            slide: "Slide 5",
-            question: "In Figure 4.1, how do external components access services provided by a software component?",
-            options: [
-                "By directly accessing internal variables",
-                "Through the defined Component Interface",
-                "By bypassing security protocols",
-                "By rewriting the component's source code"
-            ],
-            answer: 1,
-            explanation: "Figure 4.1 shows that services (Service 1, Service 2) provided by a component are accessed exclusively through its Component Interface."
-        },
-        // Slide 6
-        {
-            slide: "Slide 6",
-            question: "Why should minimizing complexity be a primary goal for architectural designers?",
-            options: [
-                "Because simpler systems eliminate the need for databases",
-                "Because complex systems are harder/expensive to understand, and programmers make more mistakes and security bugs",
-                "Because complex systems cannot run on cloud servers",
-                "Because simplicity reduces hardware memory size to zero"
-            ],
-            answer: 1,
-            explanation: "Slide 6 highlights that the more complex a system, the harder/expensive to change, and programmers are more likely to introduce bugs and vulnerabilities."
-        },
-        // Slide 7
-        {
-            slide: "Slide 7",
-            question: "Which quality attribute measures whether a system protects itself and user data from unauthorized attacks?",
-            options: [
-                "Responsiveness",
-                "Availability",
-                "Security",
-                "Usability"
-            ],
-            answer: 2,
-            explanation: "Table 4.2 defines Security as: 'Does the system protect itself and users’ data from unauthorized attacks and intrusions?'"
-        },
-        {
-            slide: "Slide 7",
-            question: "Which non-functional quality attribute measures whether a system can continue to deliver services during a partial failure?",
-            options: [
-                "Usability",
-                "Resilience",
-                "Maintainability",
-                "Responsiveness"
-            ],
-            answer: 1,
-            explanation: "Table 4.2 defines Resilience as: 'Can the system continue to deliver user services in the event of partial failure or external attack?'"
-        },
-        // Slide 8
-        {
-            slide: "Slide 8",
-            question: "What principle underpins a centralized security architecture as illustrated by the Star Wars example?",
-            options: [
-                "Storing data in multiple random places",
-                "Maintaining all information in one place to apply lots of resources to protect it",
-                "Removing authentication to improve response time",
-                "Allowing open access to all users"
-            ],
-            answer: 1,
-            explanation: "Table 4.3 explains that centralized security is based on maintaining all information in one place so lots of resources can be applied to protect it."
-        },
-        // Slide 9
-        {
-            slide: "Slide 9",
-            question: "What is a major disadvantage of a centralized security architecture?",
-            options: [
-                "It takes much longer to access data under normal conditions",
-                "If your security is breached, you lose everything stored there",
-                "It cannot be used with web browsers",
-                "It is impossible to design and build"
-            ],
-            answer: 1,
-            explanation: "Slide 9 explicitly states: 'However, if your security is breached, you lose everything.'"
-        },
-        // Slide 10
-        {
-            slide: "Slide 10",
-            question: "In a multi-database architecture (Figure 4.3), what component is needed to keep shared data consistent?",
-            options: [
-                "A user interface manager",
-                "Component C3 (Consistency mechanism)",
-                "A firewall server",
-                "A web browser extension"
-            ],
-            answer: 1,
-            explanation: "Slide 10 & Fig 4.3 mention that a multi-database architecture needs a mechanism (component C3) to ensure shared data is kept consistent."
-        },
-        // Slide 11
-        {
-            slide: "Slide 11",
-            question: "In Figure 4.2 (Shared Database Architecture), why does changing the database for C1 potentially affect C2?",
-            options: [
-                "Because C1 and C2 share the exact same central database",
-                "Because C2 depends on C1's user interface",
-                "Because the server shuts down automatically",
-                "Because shared databases do not allow updates"
-            ],
-            answer: 0,
-            explanation: "Figure 4.2 shows C1 and C2 sharing a common database. Reorganizing the database for C1 forces changes upon C2."
-        },
-        // Slide 12
-        {
-            slide: "Slide 12",
-            question: "What is the main maintainability benefit of Figure 4.3 (Multiple Database Architecture)?",
-            options: [
-                "It costs much less to build",
-                "If one component needs to change its database organization, it does not affect the other component",
-                "It runs significantly faster than shared databases",
-                "It eliminates the need for data backups"
-            ],
-            answer: 1,
-            explanation: "Slide 10 states: 'If one component needs to change the database organization, this does not affect the other component.'"
-        },
-        // Slide 13
-        {
-            slide: "Slide 13",
-            question: "Which of the following is NOT listed in Figure 4.4 as an issue influencing architectural decisions?",
-            options: [
-                "Product lifetime",
-                "Software reuse",
-                "Number of users",
-                "Developer programming language preference"
-            ],
-            answer: 3,
-            explanation: "Figure 4.4 lists: Nonfunctional product characteristics, Product lifetime, Software reuse, Number of users, and Software compatibility."
-        },
-        // Slide 14
-        {
-            slide: "Slide 14",
-            question: "If you anticipate a long product lifetime, what kind of architecture is required?",
-            options: [
-                "A rigid non-changeable architecture",
-                "An evolvable architecture that accommodates new features and technology",
-                "A single-file script architecture",
-                "An architecture without databases"
-            ],
-            answer: 1,
-            explanation: "Table 4.4 states: 'You therefore need an architecture that is evolvable, so that it can be adapted to accommodate new features and technology.'"
-        },
-        {
-            slide: "Slide 14",
-            question: "How does reusing large software components constrain architectural choices?",
-            options: [
-                "It guarantees zero software defects",
-                "You must fit your design around the software being reused",
-                "It forces you to build your own custom operating system",
-                "It increases development time by 300%"
-            ],
-            answer: 1,
-            explanation: "Table 4.4 states: 'this constrains your architectural choices because you must fit your design around the software that is being reused.'"
-        },
-        // Slide 15
-        {
-            slide: "Slide 15",
-            question: "How do you improve maintainability at the architectural level?",
-            options: [
-                "By writing monolithic single-block programs",
-                "By decomposing the system into fine-grain components that each do one thing only",
-                "By combining all application logic into the database",
-                "By removing all component interfaces"
-            ],
-            answer: 1,
-            explanation: "Slide 15 states: 'the system should be decomposed into fine-grain components, each of which does one thing and one thing only.'"
-        },
-        {
-            slide: "Slide 15",
-            question: "What is the trade-off on performance when a system is decomposed into many fine-grain components?",
-            options: [
-                "The database runs out of storage space",
-                "Communication between many components takes time, making the software slower",
-                "Compilers refuse to compile fine-grain code",
-                "Security becomes completely impossible"
-            ],
-            answer: 1,
-            explanation: "Slide 15 notes: 'it takes time for components to communicate... if many components are involved in implementing a feature, the software will be slower.'"
-        },
-        // Slide 16
-        {
-            slide: "Slide 16",
-            question: "How can security be achieved architecturally to ensure resilience if one component is compromised?",
-            options: [
-                "By placing all security in a single global variable",
-                "By designing protection as a series of layers implemented as separate components",
-                "By storing passwords in plain text files",
-                "By disabling user authentication"
-            ],
-            answer: 1,
-            explanation: "Slide 16 states: 'you can implement each of these layers as separate components so that if one component is compromised, other layers remain intact.'"
-        },
-        // Slide 17
-        {
-            slide: "Slide 17",
-            question: "In Figure 4.5 (Authentication Layers), what layers lie between the User and the Database?",
-            options: [
-                "Only a single firewall",
-                "System Auth, Operation Auth, and Encryption layers",
-                "Web server and HTML rendering layers only",
-                "No layers; direct connection"
-            ],
-            answer: 1,
-            explanation: "Figure 4.5 shows sequential layers: Component 1 (System auth), Component 2 (Operation auth), and Component 3 (Card encryption) shielding the database."
-        },
-        // Slide 18
-        {
-            slide: "Slide 18",
-            question: "Why does a layered approach to security often negatively impact software usability?",
-            options: [
-                "It makes screen colors unreadable",
-                "Users must remember multiple credentials and interactions are slowed down by security steps",
-                "It deletes user accounts after 10 minutes",
-                "It disables keyboard input"
-            ],
-            answer: 1,
-            explanation: "Slide 18 explains that users must remember passwords, interactions are slowed down, causing users to look for irritating work-arounds."
-        },
-        {
-            slide: "Slide 18",
-            question: "To avoid usability issues while maintaining security, an architecture should do all of the following EXCEPT:",
-            options: [
-                "Avoid having too many security layers",
-                "Enforce security for every minor unnecessary task",
-                "Provide helper components that reduce user load",
-                "Avoid enforcing unnecessary security"
-            ],
-            answer: 1,
-            explanation: "Slide 18 recommends NOT enforcing unnecessary security, keeping layers minimal, and providing helper components."
-        },
-        // Slide 19
-        {
-            slide: "Slide 19",
-            question: "Architecturally, how do you achieve high availability in enterprise systems?",
-            options: [
-                "By having redundant components, sensor components, and switching components",
-                "By reducing the system to a single server node",
-                "By disabling error detection logs",
-                "By using only client-side JavaScript"
-            ],
-            answer: 0,
-            explanation: "Slide 19 states availability is achieved by having redundant components, sensor components to detect failure, and switching components to transfer operation."
-        },
-        // Slide 20
-        {
-            slide: "Slide 20",
-            question: "Which of the following is one of the three core architectural design questions?",
-            options: [
-                "How should the system be organized as a set of architectural components?",
-                "What is the salary scale for junior programmers?",
-                "Which office building should host the developers?",
-                "What color should the corporate logo be?"
-            ],
-            answer: 0,
-            explanation: "Slide 20 lists 3 questions: Component organization, Distribution/communication, and Technology choices/reuse."
-        },
-        // Slide 21
-        {
-            slide: "Slide 21",
-            question: "What does 'decomposition' involve in software design?",
-            options: [
-                "Deleting unused database records",
-                "Analyzing large-scale components and representing them as a set of finer-grain components",
-                "Translating code into machine binary language",
-                "Combining all servers into a single hardware box"
-            ],
-            answer: 1,
-            explanation: "Slide 21 defines decomposition as analyzing large-scale components and representing them as a set of finer-grain components."
-        },
-        // Slide 22
-        {
-            slide: "Slide 22",
-            question: "In Figure 4.6 (Document Retrieval System), which layer handles Search and Recommendations?",
-            options: [
-                "User Interface Layer",
-                "UI Management Layer",
-                "Document Retrieval Layer",
-                "Database Management Layer"
-            ],
-            answer: 2,
-            explanation: "Figure 4.6 places Search, Recommendation, and Document Management in the 'Document Retrieval Layer'."
-        },
-        // Slide 23
-        {
-            slide: "Slide 23",
-            question: "To minimize architectural complexity, how should relationships between Component A and B be handled?",
-            options: [
-                "Scatter A and B across different unrelated packages",
-                "Localize relationships by defining A and B in the same module",
-                "Route all interactions through global variables",
-                "Eliminate interfaces between A and B"
-            ],
-            answer: 1,
-            explanation: "Slide 23 states: 'Localize relationships: If there are relationships between A and B, these are easier to understand if defined in the same module.'"
-        },
-        {
-            slide: "Slide 23",
-            question: "Why do shared dependencies increase software architecture complexity?",
-            options: [
-                "Because changes to the shared component require understanding impact on all dependent components",
-                "Because shared components run 10 times slower",
-                "Because shared data causes physical CPU damage",
-                "Because compilers forbid shared memory"
-            ],
-            answer: 0,
-            explanation: "Slide 23 explains: 'complexity increases because changes to the shared component mean you have to understand how these changes affect both A and B.'"
-        },
-        // Slide 24
-        {
-            slide: "Slide 24",
-            question: "In Figure 4.7, what type of relationship bypasses adjacent layers to connect directly to a lower layer?",
-            options: [
-                "Localized relationship",
-                "Cross-layer relationship",
-                "Direct shared dependency",
-                "Isolated component"
-            ],
-            answer: 1,
-            explanation: "Figure 4.7 illustrates a 'Cross-layer relationship' where a component interacts across layers rather than strictly through adjacent layers."
-        },
-        // Slide 25
-        {
-            slide: "Slide 25",
-            question: "Which guideline in Figure 4.8 emphasizes not rewriting the same features in multiple components?",
-            options: [
-                "Separate concerns",
-                "Focus on interfaces",
-                "Avoid functional duplication",
-                "Maximize global data sharing"
-            ],
-            answer: 2,
-            explanation: "Figure 4.8 guidelines are: 1. Separate concerns, 2. Focus on interfaces, and 3. Avoid functional duplication."
-        },
-        // Slide 26
-        {
-            slide: "Slide 26",
-            question: "In a strict layered architecture, components at Level X should ideally interact ONLY with:",
-            options: [
-                "APIs of components in Level X-1",
-                "Components at Level X+3",
-                "Direct database hardware",
-                "Any random component in any layer"
-            ],
-            answer: 0,
-            explanation: "Slide 26 states: 'Ideally, components at level X should only interact with the APIs of the components in level X-1.'"
-        },
-        // Slide 27
-        {
-            slide: "Slide 27",
-            question: "What are 'cross-cutting concerns' in software architecture?",
-            options: [
-                "Concerns that only affect a single component's database table",
-                "Systemic concerns that affect all layers in the system and user interactions",
-                "Compilation errors occurring in C++ files",
-                "Graphical user interface button layouts"
-            ],
-            answer: 1,
-            explanation: "Slide 27 defines cross-cutting concerns as systemic concerns that affect the whole system and all layers."
-        },
-        // Slide 28
-        {
-            slide: "Slide 28",
-            question: "In Figure 4.9, which two examples are depicted as vertical cross-cutting concerns spanning all horizontal layers?",
-            options: [
-                "HTML and CSS",
-                "Security and Performance",
-                "MySQL and NoSQL",
-                "Windows and Linux"
-            ],
-            answer: 1,
-            explanation: "Figure 4.9 shows Security and Performance as vertical bars penetrating across all horizontal functional layers."
-        },
-        // Slide 29
-        {
-            slide: "Slide 29",
-            question: "Why does relying on a single security component represent a critical system vulnerability?",
-            options: [
-                "It uses too much server memory",
-                "If that single component fails or is compromised, you have no reliable security left in the system",
-                "It prevents web browsers from connecting",
-                "It slows down database indexing"
-            ],
-            answer: 1,
-            explanation: "Table 4.5 states: 'If all security checking goes through that component and it stops working properly or is compromised, you have no reliable security.'"
-        },
-        // Slide 30
-        {
-            slide: "Slide 30",
-            question: "In Figure 4.10 (Generic Layered Architecture for Web Applications), what is the bottom-most layer?",
-            options: [
-                "Browser user interface",
-                "Application-specific functionality",
-                "Database and transaction management",
-                "Authentication and UI management"
-            ],
-            answer: 2,
-            explanation: "Figure 4.10 places 'Database and transaction management' at the lowest layer of the web application stack."
-        },
-        // Slide 31
-        {
-            slide: "Slide 31",
-            question: "According to Table 4.6, which layer is responsible for local input validation using JavaScript?",
-            options: [
-                "Browser-based or mobile user interface layer",
-                "Application-specific functionality layer",
-                "Database layer",
-                "Shared services layer"
-            ],
-            answer: 0,
-            explanation: "Table 4.6 states that JavaScript components for local actions like input validation belong in the Browser-based/Mobile UI level."
-        },
-        {
-            slide: "Slide 31",
-            question: "According to Table 4.6, which layer provides transaction management and recovery services?",
-            options: [
-                "Authentication layer",
-                "Application layer",
-                "Database and transaction management layer",
-                "Shared services layer"
-            ],
-            answer: 2,
-            explanation: "Table 4.6 assigns transaction management and recovery to the Database layer."
-        },
-        // Slide 32
-        {
-            slide: "Slide 32",
-            question: "According to Table 4.7 (iLearn principles), what is 'Replaceability'?",
-            options: [
-                "Replacing hardware cables when damaged",
-                "Allowing users to replace applications with alternatives without hard-wiring them into the system",
-                "Replacing developers at the end of each sprint",
-                "Replacing SQL databases with text files"
-            ],
-            answer: 1,
-            explanation: "Table 4.7 defines Replaceability as: 'It should be possible for users to replace applications in the system with alternatives... list should not be hard-wired.'"
-        },
-        {
-            slide: "Slide 32",
-            question: "Which iLearn design principle ensures that users who do not wish to modify the system do not face extra work?",
-            options: [
-                "Programmability",
-                "Extensibility",
-                "Minimum work",
-                "Age-appropriate"
-            ],
-            answer: 2,
-            explanation: "Table 4.7 defines 'Minimum work': 'Users who do not wish to change the system should not have to do extra work so that other users can make changes.'"
-        },
-        // Slide 33
-        {
-            slide: "Slide 33",
-            question: "Why did the iLearn system require age-appropriate user interfaces?",
-            options: [
-                "Because potential users spanned an age range from 3 to 18 years old",
-                "Because older users refused to use keyboards",
-                "To prevent teachers from accessing student grades",
-                "To reduce network bandwidth usage"
-            ],
-            answer: 0,
-            explanation: "Slide 33 states: 'Because the potential system users spanned an age range from 3 to 18, we needed to provide age-appropriate user interfaces.'"
-        },
-        // Slide 34
-        {
-            slide: "Slide 34",
-            question: "What architectural style was chosen for iLearn to fulfill its design principles?",
-            options: [
-                "Monolithic Architecture",
-                "Service-Oriented Architecture (SOA)",
-                "Peer-to-Peer Architecture",
-                "Mainframe Batch Architecture"
-            ],
-            answer: 1,
-            explanation: "Slide 34 states: 'These principles led us to an architectural design decision that the iLearn system should be service-oriented.'"
-        },
-        {
-            slide: "Slide 34",
-            question: "In iLearn, which level of service integration describes services that share databases but CANNOT communicate directly with each other?",
-            options: [
-                "Full integration",
-                "Partial integration",
-                "Independent",
-                "Zero integration"
-            ],
-            answer: 1,
-            explanation: "Slide 34 defines Partial integration: 'Services may share service components and databases but are not aware of and cannot communicate directly.'"
-        },
-        // Slide 35
-        {
-            slide: "Slide 35",
-            question: "In Figure 4.11 (iLearn Layered Model), which layer contains Primary, Middle-school, and Senior UI components?",
-            options: [
-                "User Interface Layer",
-                "Application Integration Services Layer",
-                "Common Services Layer",
-                "Database Layer"
-            ],
-            answer: 0,
-            explanation: "Figure 4.11 shows Primary, Middle-school, and Senior interfaces inside the top User Interface Layer."
-        },
-        // Slide 36
-        {
-            slide: "Slide 36",
-            question: "What does a distribution architecture define in a software system?",
-            options: [
-                "The copyright license assigned to the source code",
-                "The servers in the system and the allocation of components to these servers",
-                "The graphic design palette used for marketing",
-                "The schedule for programmer shifts"
-            ],
-            answer: 1,
-            explanation: "Slide 36 defines distribution architecture as defining the servers in the system and the allocation of components to these servers."
-        },
-        // Slide 37
-        {
-            slide: "Slide 37",
-            question: "In a Client-Server architecture (Figure 4.12), where is the user interface implemented?",
-            options: [
-                "On the central database server",
-                "On the user's own computer or mobile device",
-                "Inside the network router",
-                "On a cloud storage backup node"
-            ],
-            answer: 1,
-            explanation: "Slide 36 states: 'In this architecture, the user interface is implemented on the user’s own computer or mobile device.'"
-        },
-        // Slide 38
-        {
-            slide: "Slide 38",
-            question: "In the Model-View-Controller (MVC) pattern (Figure 4.13), which component manages data and business logic?",
-            options: [
-                "View",
-                "Controller",
-                "Model",
-                "User Interface Manager"
-            ],
-            answer: 2,
-            explanation: "In MVC, the Model manages application data, state, and business logic rules."
-        },
-        {
-            slide: "Slide 38",
-            question: "In the MVC pattern, what is the role of the Controller?",
-            options: [
-                "Storing records in database tables",
-                "Handling user input and updating the Model/View",
-                "Rendering HTML layout styles",
-                "Managing network hardware connections"
-            ],
-            answer: 1,
-            explanation: "In MVC, the Controller handles user input events, updates the Model data, and selects appropriate Views."
-        },
-        // Slide 39
-        {
-            slide: "Slide 39",
-            question: "What are the two widely used text-based formats for representing structured data in HTTP client-server messages?",
-            options: [
-                "Binary and Bytecode",
-                "XML and JSON",
-                "JPEG and PNG",
-                "C++ and Java"
-            ],
-            answer: 1,
-            explanation: "Slide 39 states: 'HTTP is a text-only protocol... There are two ways of representing this data that are widely used, namely XML and JSON.'"
-        },
-        {
-            slide: "Slide 39",
-            question: "Which structured data format is simpler and based on JavaScript object syntax?",
-            options: [
-                "XML",
-                "JSON",
-                "HTML",
-                "SQL"
-            ],
-            answer: 1,
-            explanation: "Slide 39 states: 'JSON is a simpler representation based on the representation of objects in the Javascript language.'"
-        },
-        // Slide 40
-        {
-            slide: "Slide 40",
-            question: "In Figure 4.14 (Multi-tier Client-Server), what separates the client presentation tier from the database tier?",
-            options: [
-                "Web and Application server tiers",
-                "Mainframe batch processors",
-                "Hardware switches only",
-                "No intermediate tiers exist"
-            ],
-            answer: 0,
-            explanation: "Figure 4.14 shows multi-tier decoupling clients, Web Servers, Application Servers, and Database Servers across distinct physical tiers."
-        },
-        // Slide 41
-        {
-            slide: "Slide 41",
-            question: "What does it mean that services in a Service-Oriented Architecture (SOA) are 'stateless'?",
-            options: [
-                "They cannot store data in databases",
-                "They do not keep session state, allowing them to be replicated and migrated across servers",
-                "They run without requiring power",
-                "They can only execute on desktop computers"
-            ],
-            answer: 1,
-            explanation: "Slide 41 states: 'Services in a service-oriented architecture are stateless components, which means that they can be replicated and can migrate from one computer to another.'"
-        },
-        // Slide 42
-        {
-            slide: "Slide 42",
-            question: "In Figure 4.15 (SOA), how do services interact with client applications?",
-            options: [
-                "Through physical hard drives",
-                "Through published service interfaces / APIs over the network",
-                "By directly accessing client memory RAM",
-                "Through manual administrative intervention"
-            ],
-            answer: 1,
-            explanation: "In SOA (Fig 4.15), clients consume stateless independent services over network API interfaces."
-        },
-        // Slide 43
-        {
-            slide: "Slide 43",
-            question: "If system components are expected to be regularly changed or replaced, why is SOA preferred?",
-            options: [
-                "SOA forbids changing components",
-                "Isolating components as separate services simplifies making those changes",
-                "SOA removes the need for web servers",
-                "SOA automatically fixes programming bugs"
-            ],
-            answer: 1,
-            explanation: "Slide 43 states under Change Frequency: 'If you anticipate that system components will be regularly changed, isolating components as separate services simplifies those changes.'"
-        },
-        {
-            slide: "Slide 43",
-            question: "When managing structured data updated by multiple features, why is a single shared database preferred over SOA?",
-            options: [
-                "Because SOA databases are free",
-                "Because a shared database provides built-in locking and transaction management",
-                "Because distributed databases are faster without network overhead",
-                "Because single databases never crash"
-            ],
-            answer: 1,
-            explanation: "Slide 43 states: 'If you are mostly using structured data... best to have a single shared database that provides locking and transaction management.'"
-        },
-        // Slide 44
-        {
-            slide: "Slide 44",
-            question: "Which technology decision in Table 4.8 considers whether to use AWS, Google, or Microsoft?",
-            options: [
-                "Database choice",
-                "Platform choice",
-                "Server choice (Public Cloud provider)",
-                "Development tools choice"
-            ],
-            answer: 2,
-            explanation: "Table 4.8 under Server choice asks: 'Should you use dedicated in-house servers or public cloud? If public cloud, Amazon, Google, Microsoft...'"
-        },
-        // Slide 45
-        {
-            slide: "Slide 45",
-            question: "Which database type (e.g. MySQL) is particularly suitable when you need strict transaction management and predictable flat table structures?",
-            options: [
-                "NoSQL databases",
-                "Relational databases",
-                "Unstructured file folders",
-                "Graph databases"
-            ],
-            answer: 1,
-            explanation: "Slide 45 states: 'Relational databases, such as MySQL, are particularly suitable for situations where you need transaction management and data structures are predictable.'"
-        },
-        {
-            slide: "Slide 45",
-            question: "Why are NoSQL databases (e.g. MongoDB) advantageous for big data analysis?",
-            options: [
-                "They require data to be flat tables only",
-                "They allow flexible hierarchical data organization enabling efficient concurrent processing",
-                "They do not use memory or storage",
-                "They restrict access to single users"
-            ],
-            answer: 1,
-            explanation: "Slide 45 states: 'NoSQL databases allow data to be organized hierarchically rather than flat tables and this allows for more efficient concurrent processing of big data.'"
-        },
-        // Slide 46
-        {
-            slide: "Slide 46",
-            question: "Which of the following is NOT listed in Slide 46 as a mobile hardware constraint affecting architecture?",
-            options: [
-                "Intermittent connectivity",
-                "Limited processor power",
-                "Power / battery management",
-                "Excessive physical RAM capacity"
-            ],
-            answer: 3,
-            explanation: "Slide 46 lists: Intermittent connectivity, Processor power, Power management, and On-screen keyboard issues."
-        },
-        {
-            slide: "Slide 46",
-            question: "How should mobile applications address 'Processor power' constraints architecturally?",
-            options: [
-                "By performing heavy computational operations on the mobile device",
-                "By minimizing computationally-intensive operations on the device (offloading to server)",
-                "By disabling the CPU during execution",
-                "By increasing screen brightness"
-            ],
-            answer: 1,
-            explanation: "Slide 46 states: 'Mobile devices have less powerful processors, so you need to minimize computationally-intensive operations.'"
-        },
-        // Slide 47
-        {
-            slide: "Slide 47",
-            question: "Why do some business products prefer running on in-house servers rather than the cloud?",
-            options: [
-                "Because in-house servers are always free",
-                "Due to concerns about cloud security and having predictable patterns of usage",
-                "Because cloud servers cannot run SQL databases",
-                "Because in-house servers require no maintenance"
-            ],
-            answer: 1,
-            explanation: "Slide 47 states: 'Some businesses are concerned about cloud security and prefer to run on in-house servers. They may have a predictable pattern of usage...'"
-        },
-        // Slide 48
-        {
-            slide: "Slide 48",
-            question: "What is a main advantage of using open-source software components in your product?",
-            options: [
-                "You gain 100% control over its future evolution",
-                "Reusing existing software reduces development costs and time-to-market",
-                "It eliminates all software licensing constraints",
-                "Open-source code never contains bugs"
-            ],
-            answer: 1,
-            explanation: "Slide 48 states: 'The advantage is that you can reuse rather than implement new software, which reduces development costs and time to market.'"
-        },
-        // Slide 49
-        {
-            slide: "Slide 49",
-            question: "How do development tools and frameworks influence system architecture?",
-            options: [
-                "They have built-in assumptions about system architectures that you must conform to",
-                "They automatically write all software requirements for you",
-                "They eliminate the need for databases",
-                "They force developers to use assembly language"
-            ],
-            answer: 0,
-            explanation: "Slide 49 states: 'These technologies have built-in assumptions about system architectures and you have to conform to these assumptions.'"
-        },
-        // Slide 50 & 51
-        {
-            slide: "Slide 50",
-            question: "Why are informal architectural diagrams effective in architectural descriptions (Key Points 1)?",
-            options: [
-                "Because they are compiled directly into machine code",
-                "Because they are fast and easy to draw and share among the development team",
-                "Because they replace all user manuals",
-                "Because they guarantee 100% security"
-            ],
-            answer: 1,
-            explanation: "Slide 50 states: 'Informal architectural diagrams are effective in architectural description because they are fast and easy to draw and share.'"
-        },
-        {
-            slide: "Slide 51",
-            question: "Which two architectural patterns are highlighted as the most commonly used for web-based systems (Key Points 2)?",
-            options: [
-                "Mainframe and Batch Processing Architectures",
-                "Multi-tier client-server and Service-oriented architectures (SOA)",
-                "Peer-to-Peer and Pipe-and-Filter Architectures",
-                "Monolithic single-threaded architectures"
-            ],
-            answer: 1,
-            explanation: "Slide 51 Key Points state: 'Multi-tier client-server and service-oriented architectures are the most commonly used architectures for web-based systems.'"
-        }
+    <div id="submitBox" class="submit-container">
+      <button class="submit-btn" onclick="finishExam()">إنهاء وتسليم الامتحان</button>
+    </div>
+  </div>
+
+  <script>
+    const questionsData = [
+      {
+        q: "الإجراء الأول الذي قام به النبي ﷺ فور وصوله المدينة المنورة ليكون مركزاً لبناء الدولة وعقد المعاهدات هو:",
+        options: [
+          "بناء المسجد النبوي الشريف",
+          "المؤاخاة بين المهاجرين والأنصار",
+          "كتابة وثيقة المدينة المنورة",
+          "إنشاء السوق التجاري الإسلامي"
+        ],
+        ans: 0,
+        exp: "أول الأعمال النبوية بالمدينة هو بناء المسجد، ثم المؤاخاة، ثم الوثيقة، ثم السوق."
+      },
+      {
+        q: "المعنى الاصطلاحي الدقيق لقوله تعالى في سورة آل عمران: ﴿وَاعْتَصِمُوا بِحَبْلِ اللَّهِ﴾ هو:",
+        options: [
+          "التمسك بالعهود مع الحلفاء",
+          "التمسك بدين الله تعالى وكتابه",
+          "الالتزام برأي الأغلبية المجتمعية",
+          "المحافظة على صلة الرحم والقرابة"
+        ],
+        ans: 1,
+        exp: "بحبل الله في الآية الكريمة تعني: بدين الله تعالى."
+      },
+      {
+        q: "دلالة ورود لفظ ﴿جَمِيعًا﴾ في قوله تعالى: ﴿وَاعْتَصِمُوا بِحَبْلِ اللَّهِ جَمِيعًا﴾ هي:",
+        options: [
+          "أن التمسك بالدين واجب على الحكام فقط",
+          "أن الفرقة قد تكون مشروعة في الرأي",
+          "مسؤولية كل فرد في الأمة عن وجوب التمسك بالإسلام",
+          "شمولية الخطاب للأمم السابقة والحاضرة معاً"
+        ],
+        ans: 2,
+        exp: "لفظ 'جميعاً' يدل على مسؤولية كل فرد من أفراد الأمة في وجوب التمسك بالإسلام."
+      },
+      {
+        q: "الحكم الشرعي للأمر بالمعروف والنهي عن المنكر المستفاد من قوله تعالى: ﴿وَلْتَكُن مِّنكُمۡ أُمَّةٞ﴾ هو:",
+        options: [
+          "فرض عين على كل مسلم ومسلمة",
+          "سنة مؤكدة لعموم الناس",
+          "مباح بحسب قدرة المكلف",
+          "فرض كفاية إذا قام به البعض سقط الإثم عن الباقين"
+        ],
+        ans: 3,
+        exp: "الخطاب موجه لطائفة مؤهلة، مما يدل على أنه فرض كفاية."
+      },
+      {
+        q: "اليهودي الذي أثار النعرة الجاهلية بين الأوس والخزرج وذكرهم بيوم بُعاث هو:",
+        options: [
+          "كعب بن الأشرف",
+          "شاس بن قيس من بني قينقاع",
+          "حيي بن أخطب من بني النضير",
+          "مرحب اليهودي من خيبر"
+        ],
+        ans: 1,
+        exp: "شاس بن قيس من يهود بني قينقاع هو من أحدث الفتنة حين غاظه تألف الأوس والخزرج."
+      },
+      {
+        q: "وُلد راوي حديث 'اتقاء الشبهات' الصحابي الجليل النعمان بن بشير رضي الله عنه في السنة:",
+        options: [
+          "الثانية للهجرة",
+          "الأولى للهجرة",
+          "الخامسة للهجرة",
+          "السابعة للهجرة"
+        ],
+        ans: 0,
+        exp: "ولد النعمان بن بشير الأنصاري رضي الله عنه في السنة الثانية للهجرة."
+      },
+      {
+        q: "المعنى الدقيق لمفردة (اسْتَبْرَأَ) الواردة في قوله ﷺ: «فَمَنِ اتَّقَى الشُّبُهَاتِ اسْتَبْرَأَ لِدِينِهِ وَعِرْضِهِ» هو:",
+        options: [
+          "أظهر براءته أمام القاضي",
+          "ترك العمل والتفرغ للعبادة",
+          "تخلص من أموال الصدقة",
+          "طلب السلامة لدينه وعرضه من النقص والطعن"
+        ],
+        ans: 3,
+        exp: "استبرأ لدينه وعرضه: أي طلب السلامة والحفظ لدينه من الإثم ولعرضه من كلام الناس."
+      },
+      {
+        q: "توقف الإمام مالك رحمه الله عن الحكم في مسألة (خنزير البحر) يمثل تطبيقاً فقهياً على:",
+        options: [
+          "الحلال البيّن الواضح",
+          "الحرام البيّن القطعي",
+          "المشتبهات الناتجة عن تعارض ظواهر الأدلة",
+          "البدعة السيئة المحدثة"
+        ],
+        ans: 2,
+        exp: "توقف لتعارض الأدلة عنده بين عموم حل صيد البحر وحرمة لحم الخنزير، فهو من المشتبهات."
+      },
+      {
+        q: "المقصود بالورع اصطلاحاً كما نص عليه منهاج التربية الإسلامية هو:",
+        options: [
+          "اجتناب الشبهات خوفاً من الوقوع في المحرمات",
+          "أداء الفرائض واجتناب الكبائر فقط",
+          "التشدد في العبادات وترك الطيبات",
+          "الإنفاق الكامل للمال في وجوه الخير"
+        ],
+        ans: 0,
+        exp: "الورع هو: اجتناب الشبهات خوفاً من الوقوع في المحرمات."
+      },
+      {
+        q: "أعلى مراتب الدين الثلاث وأجلّها هي:",
+        options: [
+          "الإسلام",
+          "الإيمان",
+          "الإحسان",
+          "الاستقامة"
+        ],
+        ans: 2,
+        exp: "مراتب الدين ثلاث: أولاها الإسلام، وثانيتها الإيمان، وأعلاها الإحسان."
+      },
+      {
+        q: "إنكار وجوب الجهاد أو إنكار حرمة الخمر والربا والزنا يندرج شرعاً تحت:",
+        options: [
+          "الكفر العملي غير المخرج من الملة",
+          "الكفر الاعتقادي (الأكبر) بإنكار حكم قطعي معلوم من الدين بالضرورة",
+          "النفاق العملي المكتسب",
+          "الشرك الأصغر والرياء"
+        ],
+        ans: 1,
+        exp: "إنكار ما هو قطعي ومعلوم من الدين بالضرورة يعتبر كفراً اعتقادياً مخرجاً من الملة."
+      },
+      {
+        q: "المسلم الذي يفطر في نهار رمضان متكاسلاً مع إقراره واعترافه بوجوب الصيام وفرضيته يُعد في حكم الشرع:",
+        options: [
+          "كافراً كفراً اعتقادياً مخرجاً من الملة",
+          "منافقاً نفاقاً اعتقادياً في الدرك الأسفل",
+          "مشركاً شركاً أصغر يحبط عمله كاملاً",
+          "عاصياً لله تعالى ومرتكباً لكبيرة تلزمه التوبة والقضاء"
+        ],
+        ans: 3,
+        exp: "من ترك واجباً تكاسلاً دون إنكار ليس بكافر بل عاصٍ ومذنب تلزمه التوبة والقضاء."
+      },
+      {
+        q: "تعليق خرزة أو تميمة على السيارة بقصد جلب الحظ أو دفع العين والحسد يُصنف شرعاً بأنه:",
+        options: [
+          "شرك أكبر يخلد صاحبه في النار",
+          "شرك أصغر لا يخرج من ملة الإسلام لكنه معصية كبيرة",
+          "كفر اعتقادي مخرج من الملة",
+          "سنة حسنة مباحة للتداوي"
+        ],
+        ans: 1,
+        exp: "تعليق التمائم من صور الشرك الأصغر، لقوله ﷺ: «مَنْ عَلَّقَ تَمِيمَةً فَقَدْ أَشْرَكَ»."
+      },
+      {
+        q: "النفاق الذي يُظهر صاحبه الإيمان ويُبطن الكفر، كحال عبد الله بن أبي بن سلول، يُسمى:",
+        options: [
+          "النفاق الاعتقادي",
+          "النفاق العملي",
+          "الشرك الأصغر",
+          "الكفر العملي"
+        ],
+        ans: 0,
+        exp: "النفاق الاعتقادي هو إظهار الإيمان وإبطان الكفر وعقوبته الدرك الأسفل من النار."
+      },
+      {
+        q: "جمع الناس على إمام واحد في صلاة التراويح زمن عمر بن الخطاب رضي الله عنه وقوله 'نِعْمَتِ الْبِدْعَةُ هَذِهِ' يُعد من باب:",
+        options: [
+          "البدعة السيئة المحرمة",
+          "الكفر العملي",
+          "النفاق العملي",
+          "السنة الحسنة واستحداث الوسائل المعينة على الدين"
+        ],
+        ans: 3,
+        exp: "فعل عمر والصحابة هو من باب السنة الحسنة والوسائل المشروعة لخدمة العبادة."
+      },
+      {
+        q: "مفهوم الكرامة الإنسانية كما عرفه المنهاج المدرسي هو:",
+        options: [
+          "تمكين الإنسان من السيطرة التامة على مقدرات الأرض",
+          "إعطاء المؤمنين امتيازات مدنية خاصة دون غيرهم",
+          "حق الفرد في أن تكون له قيمة، وأن يُحترم لذاته، وأن يُعامل بصورة لائقة",
+          "توفير الاحتياجات المادية الأساسية للمواطنين فقط"
+        ],
+        ans: 2,
+        exp: "الكرامة: حق الفرد في أن تكون له قيمة، وأن يحترم لذاته، وأن يعامل بصورة لائقة."
+      },
+      {
+        q: "أمر الله تعالى للملائكة بالسجود لسيدنا آدم عليه السلام يدل على مظهر من مظاهر:",
+        options: [
+          "تكريم الله تعالى للإنسان وتقديره",
+          "فرض العبادة لآدم من دون الله",
+          "مساواة الملائكة بالبشر في التكليف",
+          "أسبقية خلق الإنسان على سائر المخلوقات"
+        ],
+        ans: 0,
+        exp: "سجود الملائكة لآدم كان سجود تقدير وتكريم وتشريف من الله للإنسان."
+      },
+      {
+        q: "دلالة قوله تعالى: ﴿لَآ إِكۡرَاهَ فِي ٱلدِّينِ﴾ في ضوء مبادئ الكرامة الإنسانية هي ترسيخ مبدأ:",
+        options: [
+          "المساواة بين الناس في العقوبات",
+          "حق الفرد في الأمن الاقتصادي",
+          "المسؤولية الجماعية عن الخطأ",
+          "الحرية وتحديداً حرية الإنسان في الاعتقاد واختيار دينه"
+        ],
+        ans: 3,
+        exp: "الآية نص صريح في تقرير حرية الاعتقاد وعدم إجبار أحد على الدخول في الإسلام."
+      },
+      {
+        q: "تشريع الإسلام لتغسيل الميت وتكفينه والصلاة عليه وتشييعه ودفنه يدل على أن الكرامة الإنسانية:",
+        options: [
+          "تقتصر على فترة حياة الإنسان وإنتاجيته",
+          "تمتد وتستمر للإنسان حتى بعد وفاته",
+          "خاصة فقط بالشهداء والعلماء",
+          "تسقط بمجرد خروج الروح من الجسد"
+        ],
+        ans: 1,
+        exp: "أحكام الجنائز تثبت أن كرامة الإنسان في الإسلام تمتد لما بعد وفاته."
+      },
+      {
+        q: "التعريف الدقيق لعقد الزواج وفق قانون الأحوال الشخصية الأردني هو:",
+        options: [
+          "اتفاق مدني بين عائلتين لتحقيق مصالح مشتركة",
+          "وعد متبادل بالزواج يثبت بمجرد الخطوبة وقراءة الفاتحة",
+          "عقد بين رجل وامرأة تحل له شرعاً لتكوين أسرة",
+          "التزام بالإنفاق المشترك بين الشريكين"
+        ],
+        ans: 2,
+        exp: "نص القانون: الزواج عقد بين رجل وامرأة تحل له شرعاً لتكوين أسرة."
+      },
+      {
+        q: "الحكم الشرعي التكليفي للزواج في حق الشخص المستطيع القادر على نفقاته وأعبائه هو:",
+        options: [
+          "واجب وفرض عين",
+          "مباح",
+          "مندوب (مستحب)",
+          "مكروه"
+        ],
+        ans: 2,
+        exp: "ندب الإسلام إلى الزواج للقادر عليه لقوله ﷺ: «فليتزوج» وهو للأمر المندوب."
+      },
+      {
+        q: "الفرق الدقيق بين (الخِطبة) بكسر الخاء و(الخُطبة) بضم الخاء هو:",
+        options: [
+          "الخِطبة: طلب الزواج ومقدمته، بينما الخُطبة: الكلام الملقى في المحافل كخطبة الجمعة",
+          "الخِطبة: عقد لازم، والخُطبة: وعد غير ملزم",
+          "الخِطبة: خاصة بالنساء، والخُطبة: خاصة بالرجال",
+          "لا يوجد أي فرق لغوي أو اصطلاحي بينهما"
+        ],
+        ans: 0,
+        exp: "الخِطبة (بكسر الخاء): طلب الزواج، والخُطبة (بضم الخاء): الخطاب الملقى في مناسبة."
+      },
+      {
+        q: "الحكم الشرعي لعدول أحد الخاطبين عن الخِطبة لعدم تحقق المصلحة هو:",
+        options: [
+          "حرام ويقع به الطلاق",
+          "مكروه وتلزمه كفارة يمين",
+          "واجب على ولي الأمر حصراً",
+          "مباح ولا يُعد طلاقاً لأن العقد لم يتم"
+        ],
+        ans: 3,
+        exp: "العدول عن الخطبة مباح لأي من الطرفين ولا يعتبر طلاقاً لأن الخطبة وعد وليست عقداً."
+      },
+      {
+        q: "قول النبي ﷺ للصحابي المغيرة رضي الله عنه حين خطب امرأة: «انْظُرْ إِلَيْهَا فَإِنَّهُ أَحْرَى أَنْ يُؤْدَمَ بَيْنَكُمَا»، معنى (يُؤْدَمَ بَيْنَكُمَا) هو:",
+        options: [
+          "تتحقق الشهرة بينكما",
+          "تكون بينكما المحبة والاتفاق والوئام",
+          "يكثر النسل والمال لديكما",
+          "تتسع الحقوق المالية بينكما"
+        ],
+        ans: 1,
+        exp: "يؤدم بينكما: أي تدوم المودة والاتفاق والمحبة والانسجام بين الزوجين."
+      },
+      {
+        q: "بذل الوسع والطاقة في فعل الطاعات والمحافظة على الصلاة ومساعدة المحتاجين وتحمل المسؤولية المجتمعية والالتزام بالقانون يُعد تعريفاً لـ:",
+        options: [
+          "الجهاد بالمعنى العام",
+          "الجهاد بالمعنى الخاص",
+          "الجهاد بالنفس حصراً",
+          "النفير العام"
+        ],
+        ans: 0,
+        exp: "الجهاد بالمعنى العام يشمل بذل الطاقة في فعل الطاعات وعمارة المجتمع والالتزام بالقانون."
+      },
+      {
+        q: "المرتبة من مراتب الجهاد بالمعنى الخاص التي تعد مسؤولية حصرية للدولة وولي الأمر ولا يحق للأفراد خوضها دون إذنه هي:",
+        options: [
+          "الجهاد بالمال",
+          "الجهاد بالنفس ومباشرة القتال",
+          "الجهاد بالكلمة والرأي",
+          "الجهاد بالدعوة والإرشاد"
+        ],
+        ans: 1,
+        exp: "الجهاد بالنفس ومباشرة القتال مسؤولية الدولة ولا يجوز للأفراد افتئاته دون إذن ولي الأمر."
+      },
+      {
+        q: "الأصل في الحكم الشرعي للجهاد بالمعنى الخاص في الإسلام أنه:",
+        options: [
+          "فرض عين على كل مسلم دائماً",
+          "سنة مستحبة في كل الأوقات",
+          "فرض كفاية إذا قام به البعض سقط الإثم عن الباقين",
+          "مباح للدولة حسب رغبتها"
+        ],
+        ans: 2,
+        exp: "الأصل في الجهاد أنه فرض كفاية، لكنه يتحول لفرض عين في حالات مخصوصة."
+      },
+      {
+        q: "يتحول حكم الجهاد بالمعنى الخاص من فرض كفاية إلى فرض عين على المكلفين في حالة:",
+        options: [
+          "رغبة الفرد في التطوع الشخصي",
+          "وجود فائض مالي في خزينة الدولة",
+          "إذا كان العدو في بلاد بعيدة جداً",
+          "إعلان الدولة النفير العام رسمياً أو تكليف أشخاص محددين بالقتال"
+        ],
+        ans: 3,
+        exp: "يصبح فرض عين إذا استنفر ولي الأمر الناس أو حصر التكليف بأشخاص معينين."
+      },
+      {
+        q: "نهى النبي ﷺ المجاهدين عن قتل 'العَسِيف'، والمقصود بالعَسِيف في وصايا الحرب هو:",
+        options: [
+          "الأجير والعمال المكلفين بحفظ الدواب والمتاع ممن لا يقاتلون",
+          "المقاتل المقيد في الأسر",
+          "قائد جيش الأعداء المنهزم",
+          "رسول العدو ومبعوثه الدبلوماسي"
+        ],
+        ans: 0,
+        exp: "العسيف هو الأجير الذي يخدم الدواب ولا يشارك في القتال."
+      },
+      {
+        q: "معركة الكرامة الخالدة التي تصدت فيها القوات المسلحة الأردنية للعدوان الإسرائيلي وقعت بتاريخ:",
+        options: [
+          "15 أيار 1948م",
+          "5 حزيران 1967م",
+          "21 آذار 1968م",
+          "6 تشرين الأول 1973م"
+        ],
+        ans: 2,
+        exp: "وقعت معركة الكرامة في 21 آذار عام 1968م وحقق فيها الجيش العربي نصراً مؤزراً."
+      },
+      {
+        q: "المعنى اللغوي الدقيق لقوله تعالى: ﴿وَكُنتُمۡ عَلَىٰ شَفَا حُفۡرَةٖ مِّنَ ٱلنَّارِ﴾، كلمة (شَفَا) تعني:",
+        options: [
+          "عمق الحفرة وقعرها",
+          "وسط الطريق المظلم",
+          "اتساع المكان وانحداره",
+          "حافة الشيء وطرفه المشرف عليه"
+        ],
+        ans: 3,
+        exp: "شفا الشيء: حافته وطرفه المشرف على السقوط."
+      },
+      {
+        q: "توفي الصحابي الجليل النعمان بن بشير رضي الله عنه في السنة:",
+        options: [
+          "الخامسة والثلاثين للهجرة",
+          "الخامسة والستين للهجرة",
+          "السبعين للهجرة",
+          "الثانية للهجرة"
+        ],
+        ans: 1,
+        exp: "توفي النعمان بن بشير رضي الله عنه سنة 65 هـ."
+      },
+      {
+        q: "سِبَابُ المسلم وقتاله في ضوء الحديث النبوي «سِبَابُ الْمُسْلِمِ فُسُوقٌ، وَقِتَالُهُ كُفْرٌ» يُعد كفراً:",
+        options: [
+          "اعتقادياً يخرج من الملة ويوجب الخلود في النار",
+          "عملياً لا يخرج من الملة وإنما هو معصية كبيرة وذنب عظيم",
+          "أصغر يعامل صاحبه معاملة المرتد",
+          "نفاقاً اعتقادياً خالصاً"
+        ],
+        ans: 1,
+        exp: "قتال المسلم كفر عملي لا يخرج من الملة، وأطلق عليه كفر لبيان خطورته وزجراً عنه."
+      },
+      {
+        q: "أي العبارات الآتية تصف بدقة موقف الشيخ محمد الغزالي رحمه الله حين سُئل عن حكم تارك الصلاة؟",
+        options: [
+          "أجاب: حكمه أن تأخذه معك إلى المسجد",
+          "أجاب: يخرج من ملة الإسلام فوراً",
+          "أجاب: يستتاب ثلاثة أيام فإن لم يتب يُقتل",
+          "أجاب: لا تجوز معاملته ولا مبايعته في الأسواق"
+        ],
+        ans: 0,
+        exp: "قال الغزالي بحكمة ودعوة رفيقة: 'حكمه أن تأخذه معك إلى المسجد'."
+      },
+      {
+        q: "الرياء في العبادة وإظهار الطاعات بقصد نيل ثناء الناس ومدحهم يُصنف ضمن:",
+        options: [
+          "الشرك الأكبر المخرج من الإسلام",
+          "الكفر الاعتقادي المخلد في النار",
+          "الشرك الأصغر الذي حذر منه النبي ﷺ",
+          "النفاق الاعتقادي الخاص بزعماء المنافقين"
+        ],
+        ans: 2,
+        exp: "الرياء هو الشرك الأصغر لقوله ﷺ: «إن أخوف ما أخاف عليكم الشرك الأصغر: الرياء»."
+      },
+      {
+        q: "تنقيط أحرف المصحف الشريف وضبط حركاته وإعرابه يُعد مثالاً شرعياً على:",
+        options: [
+          "البدعة السيئة المذمومة",
+          "الكفر العملي المحظور",
+          "الواجب العيني التوقيفي",
+          "السنة الحسنة والوسائل المشروعة لخدمة الدين"
+        ],
+        ans: 3,
+        exp: "تنقيط المصحف من الوسائل المستحدثة التي تعين على قراءة القرآن ولا تعارضه فهي سنة حسنة."
+      },
+      {
+        q: "أول مواطن ظهور النفاق الاعتقادي تاريخياً في العهد النبوي كان في:",
+        options: [
+          "المدينة المنورة بعد الهجرة النبوية وظهور قوة الإسلام",
+          "مكة المكرمة في دار الأرقم بن أبي الأرقم",
+          "شعب أبي طالب أثناء الحصار",
+          "الحبشة أثناء هجرة الصحابة الأولى"
+        ],
+        ans: 0,
+        exp: "ظهر النفاق الاعتقادي بالمدينة بعد الهجرة حين أعز الله الإسلام وقويت شوكته."
+      },
+      {
+        q: "استعمال السُّبحة التقليدية أو السُّبحة الإلكترونية لضبط عدد التسبيح والأذكار يُحكم عليه بأنه:",
+        options: [
+          "بدعة ضلالة ومحرمة شرعاً",
+          "وسيلة مباحة لضبط العد وليست بدعة سيئة",
+          "واجب شرطي لصحة التسبيح",
+          "مكروه تحريماً لمخالفته ظاهر السنة"
+        ],
+        ans: 1,
+        exp: "السبحة وسيلة تعين على ضبط العدد وليست عبادة محدثة بحد ذاتها، فهي جائزة ومباحة."
+      },
+      {
+        q: "من مبادئ الكرامة الإنسانية التي تدل على أن التفاضل بين البشر لا يقوم على العرق أو اللون وإنما على العمل الصالح:",
+        options: [
+          "مبدأ الحرية المطلقة",
+          "مبدأ الاستخلاف البيئي",
+          "مبدأ الأمن الجسدي",
+          "مبدأ المساواة بين الناس"
+        ],
+        ans: 3,
+        exp: "المساواة تقرر أن الناس سواسية من تراب ولا فضل لعربي على أعجمي إلا بالتقوى."
+      },
+      {
+        q: "الفحص الطبي الإلزامي قبل إجراء عقد الزواج في الأردن يهدف بصورة أساسية إلى:",
+        options: [
+          "تحديد القدرة المالية للخاطب",
+          "منع زواج الأقارب بصورة مطلقة",
+          "الحد من انتشار الأمراض الوراثية وضمان سلامة النسل والأسرة",
+          "تحديد مقدار المهر المعجل والمؤجل"
+        ],
+        ans: 2,
+        exp: "الفحص الطبي يقي النسل من الأمراض الوراثية ويحفظ استقرار الأسرة الصحي والنفسي."
+      },
+      {
+        q: "الصحابي الجليل الذي أمره النبي ﷺ بهجاء المشركين شعراً وقال له: «اهْجُهُمْ وَجِبْرِيلُ مَعَكَ» هو:",
+        options: [
+          "عبد الله بن رواحة رضي الله عنه",
+          "كعب بن مالك رضي الله عنه",
+          "حسان بن ثابت رضي الله عنه",
+          "ثابت بن قيس رضي الله عنه"
+        ],
+        ans: 2,
+        exp: "حسان بن ثابت رضي الله عنه هو شاعر الرسول الذي كلفه بالجهاد بالكلمة."
+      },
+      {
+        q: "تميزت المرحلة المكية (13 سنة) في تاريخ تشريع الجهاد بأنها كانت مرحلة:",
+        options: [
+          "جهاد بالدعوة والبيان والصبر وكف اليد عن القتال واستخدام السلاح",
+          "قتال دفاعي مسلح لرد عدوان قريش",
+          "قتال هجومي لفتح الطرق التجارية",
+          "إعلان النفير العام وتجهيز الكتائب الحربية"
+        ],
+        ans: 0,
+        exp: "المرحلة المكية اقتصرت على الدعوة والصبر والتثبيت العقدي دون قتال بالسلاح."
+      },
+      {
+        q: "قوله تعالى: ﴿وَلَا تَكُونُواْ كَٱلَّذِينَ تَفَرَّقُواْ وَٱخۡتَلَفُواْ مِنۢ بَعۡدِ مَا جَآءَهُمُ ٱلۡبَيِّنَٰتُ﴾، المقصود بـ (الْبَيِّنَاتُ):",
+        options: [
+          "الأموال والغنائم الدنيوية",
+          "البراهين والدلائل الواضحة والحجج القاطعة",
+          "الأنساب والأحساب المشتركة",
+          "العهود والمواثيق التجارية"
+        ],
+        ans: 1,
+        exp: "البينات: البراهين والدلائل الواضحة التي لا تدع مجالاً للشك."
+      },
+      {
+        q: "المثال الذي ضربه النبي ﷺ في حديث اتقاء الشبهات لبيان التدرج في الوقوع في الحرام هو:",
+        options: [
+          "التاجر الذي يخلط البضائع الرديئة بالجيدة",
+          "المسافر الذي يضل طريقه في الصحراء المظلمة",
+          "السفينة التي يقتسم ركابها الطابقين العلوي والسفلي",
+          "الراعي الذي يرعى ماشيته قرب حدود الأرض المحمية فيوشك أن ترتع فيها"
+        ],
+        ans: 3,
+        exp: "ضرب المثل بالراعي يرعى حول الحمى يوشك أن يرتع فيه."
+      },
+      {
+        q: "المؤسسة الرسمية المرجعية في المملكة الأردنية الهاشمية التي يرجع إليها المسلم لتعرّف الأحكام الشرعية والمشتبهات هي:",
+        options: [
+          "دائرة الإفتاء العام",
+          "وزارة التنمية الاجتماعية",
+          "دائرة قاضي القضاة للمحاكم فقط",
+          "وزارة الأوقاف والشؤون والمقدسات الإسلامية"
+        ],
+        ans: 0,
+        exp: "دائرة الإفتاء العام هي المرجع الرسمي للفتوى وبيان الأحكام الشرعية بالأردن."
+      },
+      {
+        q: "شتم أحد الرسل الكرام أو الاستهزاء بآيات القرآن الكريم يُصنف في ضوء المنهاج بأنه:",
+        options: [
+          "معصية صغرى تلزمها كفارة إطعام مساكين",
+          "نفاق عملي لا يخرج صاحبه من الإسلام",
+          "كفر عملي مخرج لفاعله من ملة الإسلام",
+          "شرك أصغر يترتب عليه التعزير القضائي فقط"
+        ],
+        ans: 2,
+        exp: "سب الله أو الاستهزاء بالقرآن والرسل كفر عملي مخرج من الإسلام بإجماع العلماء."
+      },
+      {
+        q: "قول النبي ﷺ: «... وَمَنْ قَذَفَ مُؤْمِنًا بِكُفْرٍ فَهُوَ كَقَتْلِهِ» يدل دلالة مباشرة على:",
+        options: [
+          "جواز تكفير من ترك بعض الواجبات",
+          "أن التكفير حق مشروع لعموم المسلمين في خلافاتهم",
+          "وجوب تطبيق العقوبة البدنية على المتكاسلين",
+          "التحذير الشديد من فتنة التكفير وعظم إثم اتهام المسلم بالكفر"
+        ],
+        ans: 3,
+        exp: "الحديث يحذر من إطلاق أحكام التكفير ويبين أن قذف المؤمن بالكفر كقتله في الإثم."
+      },
+      {
+        q: "سورة آل عمران سورة مدنية، ويبلغ عدد آياتها الكريمة:",
+        options: [
+          "120 آية",
+          "200 آية",
+          "286 آية",
+          "176 آية"
+        ],
+        ans: 1,
+        exp: "سورة آل عمران مدنية وعدد آياتها (200) آية."
+      },
+      {
+        q: "الصداق والمهر والهدية التي يقدمها الرجل لزوجته تطيباً لنفسها يُعد من تطبيقات:",
+        options: [
+          "الخِطبة الإلزامية",
+          "حقوق الزوج على الزوجة",
+          "عقود التبرع المؤقتة",
+          "حقوق المرأة والوفاء بعقد الزواج"
+        ],
+        ans: 3,
+        exp: "المهر حق مالي للمرأة أوجبه الشارع إكراماً لها ودليلاً على الرغبة في إمساكها بمعروف."
+      },
+      {
+        q: "ترك النبي ﷺ أكل تمرة ساقطة على الطريق يُعد تطبيقاً عملياً نبوياً على:",
+        options: [
+          "اتقاء الشبهات خوفاً من أن تكون من مال الصدقة المحرم عليه",
+          "تحريم أكل التمر الساقط لجميع المسلمين",
+          "وجوب ترك الطيبات في حالة الفقر",
+          "كراهة الأكل أثناء المشي في الطرقات"
+        ],
+        ans: 0,
+        exp: "تركها ورعاً واتقاءً للشبهة لقوله: «لولا أني أخشى أن تكون من الصدقة لأكلتها»."
+      },
+      {
+        q: "أركان الإيمان التي يُعد إنكار أحدها كفراً اعتقادياً مخرجاً من الملة يبلغ عددها:",
+        options: [
+          "خمسة أركان",
+          "أربعة أركان",
+          "ستة أركان",
+          "سبعة أركان"
+        ],
+        ans: 2,
+        exp: "أركان الإيمان ستة: الإيمان بالله، وملائكته، وكتبه، ورسله، واليوم الآخر، والقدر خيره وشره."
+      },
+      {
+        q: "أول الآيات نزولاً في الإذن للمسلمين بمباشرة القتال لرد الظلم بعد الهجرة هي قوله تعالى:",
+        options: [
+          "﴿وَقَٰتِلُواْ فِي سَبِيلِ ٱللَّهِ ٱلَّذِينَ يُقَٰتِلُونَكُمۡ﴾",
+          "﴿ٱنفِرُواْ خِفَافٗا وَثِقَالٗا﴾",
+          "﴿يَٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُواْ ٱتَّقُواْ ٱللَّهَ حَقَّ تُقَاتِهِۦ﴾",
+          "﴿أُذِنَ لِلَّذِينَ يُقَٰتَلُونَ بِأَنَّهُمۡ ظُلِمُواْ وَإِنَّ ٱللَّهَ عَلَىٰ نَصۡرِهِمۡ لَقَدِيرٌ﴾"
+        ],
+        ans: 3,
+        exp: "أول آية أذنت بالقتال هي سورة الحج: ﴿أُذِنَ لِلَّذِينَ يُقَاتَلُونَ بِأَنَّهُمْ ظُلِمُوا﴾."
+      },
+      {
+        q: "تولى الصحابي الجليل النعمان بن بشير رضي الله عنه القضاء في عهد الدولة الأموية في مدينة:",
+        options: [
+          "دمشق",
+          "الكوفة",
+          "حمص",
+          "المدينة المنورة"
+        ],
+        ans: 0,
+        exp: "عمل النعمان بن بشير رضي الله عنه قاضياً لدمشق، وتولى حكم الكوفة وحمص."
+      },
+      {
+        q: "الحكمة العظمى من تشريع النكاح المذكورة في قوله تعالى: ﴿وَمِنۡ ءَايَٰتِهِۦٓ أَنۡ خَلَقَ لَكُم مِّنۡ أَنفُسِكُمۡ أَزۡوَٰجٗا لِّتَسۡكُنُوٓاْ إِلَيۡهَا وَجَعَلَ بَيۡنَكُم مَّوَدَّةٗ وَرَحۡمَةً﴾ هي:",
+        options: [
+          "حصول التفاخر بالنسب والمال",
+          "منح النفس السكينة والمودة والرحمة والاستقرار النفسي",
+          "التنافس في إقامة الولائم والأفراح",
+          "إسقاط واجب النفقة عن الآباء"
+        ],
+        ans: 1,
+        exp: "الآية نصت صراحة على علة السكن وحصول المودة والرحمة بين الزوجين."
+      },
+      {
+        q: "من الأعمال التي تُعد اعتداءً صارخاً على كرامة الإنسان وحرمتها الشريعة الإسلامية بنصوص قطعية:",
+        options: [
+          "إلزام الأفراد باحترام القوانين المرورية",
+          "عقد المعاهدات الدولية السلمية",
+          "التنابز بالألقاب والسخرية والاستهزاء والغيبة",
+          "المطالبة بالحقوق عبر القضاء العادل"
+        ],
+        ans: 2,
+        exp: "السخرية والتنابز بالألقاب محرمة بنص سورة الحجرات لأنها تهدر كرامة الإنسان."
+      },
+      {
+        q: "تجهيز الجيش وبناء المصانع الحربية والمستشفيات ورعاية أسر المجاهدين يُعد من مرتبة:",
+        options: [
+          "الجهاد بالنفس",
+          "الجهاد بالكلمة",
+          "الجهاد بالرأي والمشورة",
+          "الجهاد بالمال"
+        ],
+        ans: 3,
+        exp: "بذل المال في السلاح والمستشفيات والعتاد ورعاية أسر المقاتلين هو الجهاد بالمال."
+      },
+      {
+        q: "المعنى الاصطلاحي للفظ (المُنكَر) في قوله تعالى: ﴿وَيَنۡهَوۡنَ عَنِ ٱلۡمُنكَرِ﴾ هو:",
+        options: [
+          "ما جهله عامة الناس من العلوم الدنيوية",
+          "كل أمر خالف العادات القبلية القديمة",
+          "كل أمر مستقبح نهى عنه الشرع الحنيف وقبحه العقل السليم",
+          "كل ما يتعلق بالمعاملات المالية المستحدثة"
+        ],
+        ans: 2,
+        exp: "المنكر في الاصطلاح الشرعي: هو كل أمر مستقبح شرعاً وعقلاً."
+      },
+      {
+        q: "حكم قراءة الفاتحة في مرحلة الخِطبة من حيث انعقاد عقد الزواج الشرعي وترتب آثاره:",
+        options: [
+          "تُعد عقداً شرعياً كاملاً يترتب عليه كل آثار الزواج",
+          "لا ينعقد بها الزواج لأن الخطبة مجرد وعد بالزواج ومقدمة له",
+          "تُعد طلاقاً بائناً إذا رغب أحدهما في الفسخ",
+          "تمنع العدول نهائياً وتلزم المهر كاملاً"
+        ],
+        ans: 1,
+        exp: "قراءة الفاتحة لا تعقد الزواج، فالخطبة تبقى مجرد وعد حتى يوثق العقد بأركانه وشروطه."
+      },
+      {
+        q: "ضرب النبي ﷺ للمشركين في غزوة مؤتة أروع الأمثلة في الثبات، وكان عدد جيش المسلمين في مؤتة:",
+        options: [
+          "ألف مقاتل",
+          "عشرة آلاف مقاتل",
+          "ثلاثة آلاف مقاتل",
+          "ثلاثين ألف مقاتل"
+        ],
+        ans: 2,
+        exp: "قوام جيش المسلمين في مؤتة كان ثلاثة آلاف مقاتل."
+      },
+      {
+        q: "النهي عن (الغُلُول) في وصايا النبي ﷺ لجيوش المسلمين يعني تحريم:",
+        options: [
+          "قتل النساء والشيوخ في المعركة",
+          "الأخذ من الغنائم بغير حق ومن دون إذن ولي الأمر",
+          "حرق الأشجار المثمرة وقطعها",
+          "تشويه جثث القتلى بعد موتهم"
+        ],
+        ans: 1,
+        exp: "الغلول: هو الخيانة وأخذ شيء من الغنيمة قبل قسمتها وبغير إذن الإمام."
+      },
+      {
+        q: "قوله تعالى: ﴿وَلَا تَمُوتُنَّ إِلَّا وَأَنتُم مُّسۡلِمُونَ﴾ يوجه المسلم دلالياً إلى ضرورة:",
+        options: [
+          "تمثل السلوك القويم بصورة دائمة والاستقامة على الدين حتى آخر لحظة في الحياة",
+          "تمني الموت السريع في ساحات القتال",
+          "اعتزال الناس والانقطاع التام في المساجد",
+          "تأجيل التوبة إلى سن الشيخوخة"
+        ],
+        ans: 0,
+        exp: "الآية توجب دوام الاستقامة على الإسلام ليختم للمسلم به عند وفاته."
+      },
+      {
+        q: "المضغة التي إذا صلحت صلح الجسد كله وإذا فسدت فسد الجسد كله هي:",
+        options: [
+          "اللسان",
+          "العقل والدماغ",
+          "القلب",
+          "العين"
+        ],
+        ans: 2,
+        exp: "بين النبي ﷺ أن المضغة هي القلب: «ألا وهي القلب»."
+      },
+      {
+        q: "تسمية سورة آل عمران بـ 'الزهراء' تعني في اللغة والاصطلاح:",
+        options: [
+          "السورة الطويلة جداً",
+          "السورة المضيئة المنيرة لما فيها من هدايات وأحكام",
+          "السورة الجامعة لأحكام المواريث",
+          "السورة التي نزلت في مكة ليلاً"
+        ],
+        ans: 1,
+        exp: "الزهراء: أي المضيئة المنيرة لقارئها بما تحمله من أنوار الهداية والتوحيد."
+      },
+      {
+        q: "من الأعمال التي تُعين بصورة مباشرة على صلاح القلب وسلامته من الأمراض والشبهات:",
+        options: [
+          "المداومة على أداء العبادات والذكر ومجالسة الصالحين وأكل الحلال",
+          "الانشغال بملاحقة عيوب الناس وتتبع عوراتهم",
+          "الخوض في الجدال والخصومات العقدية العقيمة",
+          "الإكثار من السؤال عما لا فائدة فيه"
+        ],
+        ans: 0,
+        exp: "العبادات، الذكر، أكل الحلال، ومجالسة الصالحين هي أسباب طهارة القلب وصلاحه."
+      },
+      {
+        q: "الاعتداء على البيئة أثناء الحرب كحرق الأشجار المثمرة أو قتل الحيوانات لغير منفعة يُعد في الإسلام:",
+        options: [
+          "تكتيكاً عسكرياً مباحاً في جميع الأحوال",
+          "سنة متبعة في الفتوحات الإسلامية",
+          "سلوكاً مخالفاً لأخلاقيات الجهاد وتشريعاته السمحة",
+          "مكروهاً فقط إذا كانت الأرض للمسلمين"
+        ],
+        ans: 2,
+        exp: "حرم الإسلام تخريب البيئة أو قطع الأشجار أو قتل الحيوانات عبثاً أثناء الحروب."
+      },
+      {
+        q: "الأساس الأول والأهم الذي حث النبي ﷺ على مراعاته عند اختيار الزوجة هو:",
+        options: [
+          "الحسب والنسب الرفيع",
+          "المال والجاه",
+          "الجمال والمنظر",
+          "الدين والخلق الفاضل"
+        ],
+        ans: 3,
+        exp: "قال ﷺ: «فاظفر بذات الدين تربت يداك»، فالدين والخلق هو الأساس المتين."
+      },
+      {
+        q: "تجرؤ بعض الأفراد على تكفير المسلمين بناءً على ارتكابهم للمعاصي والكبائر يمثل فكراً:",
+        options: [
+          "منحرفاً ومتطرفاً حذرت منه الشريعة الإسلامية ونصوص السنة النبوية",
+          "صحيحاً يمثل منهج السلف الصالح",
+          "واجباً لحماية نقاء المجتمع",
+          "مستحباً في أوقات الفتن"
+        ],
+        ans: 0,
+        exp: "التكفير بالمعاصي منهج الخوارج والمتطرفين وهو محرم وباطل شرعاً."
+      },
+      {
+        q: "أي مما يأتي يُعد من صور الحلال البيّن الذي لا شبهة فيه مطلقاً؟",
+        options: [
+          "شراء بضاعة مسروقة بسعر زهيد",
+          "الطيبات من الأطعمة والبيوع والإجارات المشروعة",
+          "المعاملات المالية التي تجمع بين الربح والربا غير المفرز",
+          "أكل لحوم السباع وذوات المخالب"
+        ],
+        ans: 1,
+        exp: "الطيبات من المآكل والبيوع والعقود المنضبطة بالشرع حلال بيّن ظاهر الحل."
+      },
+      {
+        q: "معنى (المُثْلَة) المنهي عنها قطعاً في وصية النبي ﷺ للمجاهدين هو:",
+        options: [
+          "أخذ الأموال العامة",
+          "قتال من لم يبدأ بالقتال",
+          "تشويه جثث القتلى بقطع أطرافهم أو التمثيل بهم بعد الموت",
+          "مباغتة العدو ليلاً"
+        ],
+        ans: 2,
+        exp: "المُثلة هي تشويه أجساد القتلى وجثثهم، وقد نهى عنها الإسلام نهياً جازماً."
+      },
+      {
+        q: "الآية الكريمة الدالة على أن حفظ النفس الواحدة من القتل بمثابة إحياء للناس جميعاً هي في سورة:",
+        options: [
+          "سورة المائدة (الآية 32)",
+          "سورة النساء (الآية 29)",
+          "سورة البقرة (الآية 190)",
+          "سورة آل عمران (الآية 103)"
+        ],
+        ans: 0,
+        exp: "قال تعالى في سورة المائدة: ﴿مَن قَتَلَ نَفْسًا بِغَيْرِ نَفْسٍ... فَكَأَنَّمَا قَتَلَ النَّاسَ جَمِيعًا﴾."
+      },
+      {
+        q: "رأس الأمر الإسلام وعموده الصلاة وذروة سنامه:",
+        options: [
+          "البر بالوالدين",
+          "الجهاد في سبيل الله",
+          "حفظ القرآن الكريم",
+          "أداء الحج المبرور"
+        ],
+        ans: 1,
+        exp: "قال ﷺ: «رأس الأمر الإسلام، وعموده الصلاة، وذروة سنامه الجهاد في سبيل الله»."
+      },
+      {
+        q: "سؤال المسلم لأهل العلم والاختصاص عند التباس الأحكام الشرعية عليه يُعد تطبيقاً لقوله تعالى:",
+        options: [
+          "﴿وَٱعۡتَصِمُواْ بِحَبۡلِ ٱللَّهِ جَمِيعٗا﴾",
+          "﴿فَٱسۡتَقِمۡ كَمَآ أُمِرۡتَ﴾",
+          "﴿فَسۡـَٔلُوٓاْ أَهۡلَ ٱلذِّكۡرِ إِن كُنتُمۡ لَا تَعۡلَمُونَ﴾",
+          "﴿وَلَا تَكُونُواْ كَٱلَّذِينَ تَفَرَّقُواْ﴾"
+        ],
+        ans: 2,
+        exp: "الرجوع للعلماء والراسخين عند الاشتباه أمر قرآني في سورة الأنبياء."
+      },
+      {
+        q: "الصلح التاريخي الذي فضله النبي ﷺ حقناً للدماء وإيثاراً للسلم هو:",
+        options: [
+          "صلح الحديبية (السنة 6 هـ)",
+          "وثيقة المدينة (السنة 1 هـ)",
+          "معاهدة تبوك (السنة 9 هـ)",
+          "بيعة العقبة الثانية"
+        ],
+        ans: 0,
+        exp: "صلح الحديبية أظهر رغبة النبي ﷺ في السلم وحقن الدماء وإشاعة الأمان."
+      },
+      {
+        q: "عقد الخطبة وقراءة الفاتحة يبيح للخاطب شرعاً:",
+        options: [
+          "الخلوة بالمخطوبة والسفر معها دون محرم",
+          "التعرف إليها بوجود محرمها ورؤيتها وضبط أساسيات الزواج",
+          "إسقاط حقها في المهر المؤجل",
+          "إلزامها بكافة الواجبات الزوجية"
+        ],
+        ans: 1,
+        exp: "الخطبة مرحلة وعد وتعارف بضوابط الشرع، ولا تحل المحرمات كعقد الزواج."
+      },
+      {
+        q: "الصحابي الذي قال فيه النبي ﷺ لأصحابه في قصة إيثار حبه للمؤمنين: «إِنِّي قَدْ رُزِقْتُ حُبَّهَا»، كان يقصد السيدة:",
+        options: [
+          "عائشة بنت أبي بكر رضي الله عنها",
+          "حفصة بنت عمر رضي الله عنها",
+          "سودة بنت زمعة رضي الله عنها",
+          "خديجة بنت خويلد رضي الله عنها"
+        ],
+        ans: 3,
+        exp: "قال النبي ﷺ هذا الحديث في وفائه وحبه الصادق لأم المؤمنين خديجة رضي الله عنها."
+      },
+      {
+        q: "المعنى اللغوي لكلمة (مُضْغَةً) الواردة في حديث النعمان بن بشير رضي الله عنه هو:",
+        options: [
+          "قطعة دم متجمدة في العروق",
+          "قطعة لحم صغيرة بقدر ما يُمضغ في الفم",
+          "عضو الإبصار الرئيسي",
+          "جوهر الروح الباطنة"
+        ],
+        ans: 1,
+        exp: "المضغة لغة: قطعة لحم بقدر ما يمضغه الإنسان في فمه."
+      },
+      {
+        q: "أي الحالات الآتية توجب غسل الثوب كاملاً من باب اتقاء الشبهات والورع؟",
+        options: [
+          "إذا علم موضع النجاسة الدقيق على الثوب",
+          "إذا شك أصلاً في وجود النجاسة دون أي قرينة",
+          "إذا تيقن من إصابة النجاسة لجزء غير معلوم مكانه في الثوب",
+          "إذا غُسل الثوب بمنظفات حديثة"
+        ],
+        ans: 2,
+        exp: "إذا أصابت النجاسة موضعاً مجهولاً من الثوب، فاتقاء الشبهة بغسله كله تيقناً للطهارة."
+      },
+      {
+        q: "الإنكار القلبي للبعث والجزاء والحساب يوم القيامة يُصنف شرعاً بأنه:",
+        options: [
+          "كفر اعتقادي يخرج من الملة باتفاق",
+          "نفاق عملي يوجب التعزير",
+          "شرك أصغر يحبط بعض الأعمال",
+          "معصية دون الكفر"
+        ],
+        ans: 0,
+        exp: "إنكار أركان الإيمان كالإيمان باليوم الآخر هو كفر اعتقادي أكبر مخرج من الإسلام."
+      },
+      {
+        q: "الغاية العليا من خلق الله تعالى للكون وتسخيره للإنسان هي:",
+        options: [
+          "الاستمتاع العبثي بمباهج الحياة",
+          "تمكين الإنسان من القيام بمهمة الاستخلاف وعمارة الأرض بالحق والعبادة",
+          "تدمير الموارد الطبيعية والتوسع الاستعماري",
+          "الانشغال بجمع الثروات دون ضوابط"
+        ],
+        ans: 1,
+        exp: "سخر الله الكون ليعين الإنسان على أداء أمانة الاستخلاف والعبادة وعمارة الأرض."
+      },
+      {
+        q: "الحديث النبوي: «آيَةُ الْمُنَافِقِ ثَلَاثٌ: إِذَا حَدَّثَ كَذَبَ، وَإِذَا وَعَدَ أَخْلَفَ، وَإِذَا اؤْتُمِنَ خَانَ» يصف خصال:",
+        options: [
+          "الكفر الاعتقادي الأكبر",
+          "الشرك الجلي",
+          "النفاق العملي",
+          "البدعة السيئة"
+        ],
+        ans: 2,
+        exp: "هذه الخصال الثلاث تمثل صفات النفاق العملي الذي حذر منه الإسلام."
+      },
+      {
+        q: "إنشاء المراكز البحثية والمنصات الرقمية لدحض الشبهات الموجهة ضد الإسلام يُعد نوعاً من:",
+        options: [
+          "الجهاد بالكلمة والرأي والإعلام",
+          "الجهاد بالنفس",
+          "الجهاد بالمال حصراً",
+          "الجهاد العرفي"
+        ],
+        ans: 0,
+        exp: "الرد الفكري والإعلامي ودحض الشبهات بالبراهين يندرج تحت الجهاد بالكلمة."
+      },
+      {
+        q: "التصرف الشرعي الصحيح لمن اشتبه عليه أمر شركة مساهمة تخلط بين معاملات مباحة ومعاملات ربوية محرمة هو:",
+        options: [
+          "المجازفة وشراء الأسهم بناءً على كثرة الأرباح",
+          "اجتناب شراء أسهم تلك الشركة تورعاً واتقاءً للشبهات",
+          "تحليل المعاملات المحرمة لمصلحة الاقتصاد",
+          "الاستثمار فيها وإخراج نسبة ضئيلة دون سؤال أهل الذكر"
+        ],
+        ans: 1,
+        exp: "الورع واتقاء الشبهات يقتضيان ترك الاستثمار في الشركات ذات الأنشطة المختلطة بالحرام."
+      },
+      {
+        q: "استحقاق الأمم السابقة للعذاب العظيم في الآخرة المذكور في سورة آل عمران نتج أساساً عن:",
+        options: [
+          "قلة أموالهم وضعف مواردهم الطبيعية",
+          "تنازعهم وتفرقهم واختلافهم من بعد ما جاءتهم البينات والدلائل الواضحة",
+          "عدم قدرتهم على بناء المدن والقلاع",
+          "قلة أعداد جيوشهم في مواجهة الأعداء"
+        ],
+        ans: 1,
+        exp: "نصت الآية: تفرقوا واختلفوا من بعد ما جاءهم البينات فاستحقوا العذاب العظيم."
+      },
+      {
+        q: "الإيمان هو التصديق الجازم بكل ما جاء من عند الله تعالى وثبت عن رسوله ﷺ، ومحله الأصلي هو:",
+        options: [
+          "اللسان واللفظ الظاهر فقط",
+          "الجوارح والأعضاء الخارجية",
+          "القلب واستقراره في الوجدان",
+          "العادات والتقاليد الاجتماعية"
+        ],
+        ans: 2,
+        exp: "الإيمان تصديق قلبي جازم ينعكس على القول والعمل."
+      },
+      {
+        q: "من وصايا النبي ﷺ للمجاهدين التي تضمن الحفاظ على حياة المدنيين الأبرياء:",
+        options: [
+          "«لَا تَقْتُلُوا وِلْدَانًا وَلَا امْرَأَةً وَلَا شَيْخًا كَبِيرًا وَلَا عَاسِفًا»",
+          "«اغْزُوا وَخُذُوا كُلَّ مَا تَجِدُونَهُ»",
+          "«اقْطَعُوا الشَّجَرَ لِلتَّضْيِيقِ عَلَى الْأَعْدَاءِ»",
+          "«لَا تَقْبَلُوا الصُّلْحَ فِي أَيِّ حَالٍ»"
+        ],
+        ans: 0,
+        exp: "نهى النبي ﷺ صراحة عن قتل النساء والأطفال والشيوخ والعمال غير المقاتلين."
+      },
+      {
+        q: "توفير الدولة الإسلامية وثيقة تكفل للمواطنين من غير المسلمين حقوقهم في العبادة والأموال يمثل تطبيقاً لمبدأ:",
+        options: [
+          "الحرية والأمن وحفظ الكرامة الإنسانية",
+          "التمييز الطبقي المشروع",
+          "إسقاط سيادة الدولة",
+          "الجهاد بالمال"
+        ],
+        ans: 0,
+        exp: "وثيقة المدينة والعهدة العمرية كفلت حرية التدين والأمان المالي والجسدي لغير المسلمين."
+      },
+      {
+        q: "المعنى اللغوي لكلمة (الْبَاءَةَ) في قوله ﷺ: «مَنِ اسْتَطَاعَ مِنْكُمُ الْبَاءَةَ فَلْيَتَزَوَّجْ» هو:",
+        options: [
+          "الرغبة النفسية فقط",
+          "القدرة والاستطاعة على مؤن النكاح وتكاليفه وأعبائه",
+          "بلوغ سن الثلاثين عاماً",
+          "امتلاك مسكن خاص مستقل"
+        ],
+        ans: 1,
+        exp: "الباءة في اللغة والشرع: القدرة على أعباء وتكاليف الزواج والقيام بحقوقه."
+      },
+      {
+        q: "كل بدعة أحدثت في الدين مما ليس له أصل في الشرع ويؤدي إلى تشويهه تُعد:",
+        options: [
+          "سنة حسنة يؤجر فاعلها",
+          "مكروهة تنزيهاً فقط",
+          "بدعة سيئة وضلالة ومردودة على صاحبها",
+          "واجباً كفائياً مستحدثاً"
+        ],
+        ans: 2,
+        exp: "قال ﷺ: «من أحدث في أمرنا هذا ما ليس منه فهو رد»، وقال: «كل بدعة ضلالة»."
+      },
+      {
+        q: "الركن الأساسي الذي تفرضه الدولة لحماية حدودها ومنع الأفراد من إثارة الفوضى المسلحة هو حصر قرار إعلان الجهاد بـ:",
+        options: [
+          "الجماعات والأحزاب الخاصة",
+          "الأفراد ووجهاء العشائر",
+          "ولي الأمر (رأس الدولة والجهات الرسمية المختصة)",
+          "وسائل الإعلام العامة"
+        ],
+        ans: 2,
+        exp: "إعلان القتال والجهاد بالنفس اختصاص حصري لولي الأمر والدولة لمنع الفوضى."
+      },
+      {
+        q: "حكم الاستهزاء بالمؤمنين والتنابز بالألقاب المحرم بنص القرآن الكريم في سورة الحجرات يُعد اعتداءً على:",
+        options: [
+          "حق الملكية المالية",
+          "حق الفرد في الكرامة والعرض والمكانة الإنسانية",
+          "حق التعليم والعمل",
+          "حرية التنقل والإقامة"
+        ],
+        ans: 1,
+        exp: "التنابز والسخرية اعتداء على الكرامة الإنسانية والعرض الذي عصمه الإسلام."
+      },
+      {
+        q: "من نتائج الاعتصام بكتاب الله وسنة نبيه وتوحيد الصف الداخلي للمجتمع:",
+        options: [
+          "تحقيق القوة والمنعة والازدهار والنجاة من الهلاك",
+          "ضعف التنافس الاقتصادي",
+          "الانغلاق التام عن العالم الخارجي",
+          "إلغاء التنوع الثقافي المشروع"
+        ],
+        ans: 0,
+        exp: "وحدة الأمة والاعتصام بحبل الله هو سبب العزة والقوة والنصر والتمكين."
+      },
+      {
+        q: "الصحابي الجليل النعمان بن بشير رضي الله عنه تولى إمارة وحكم مدينتي:",
+        options: [
+          "مكة المكرمة والمدينة المنورة",
+          "الكوفة وحمص",
+          "البصرة وبغداد",
+          "الفسطاط والإسكندرية"
+        ],
+        ans: 1,
+        exp: "تولى النعمان بن بشير رضي الله عنه حكم الكوفة وحمص في العهد الأموي."
+      },
+      {
+        q: "التدرج الذي حذر منه النبي ﷺ في الوقوع في المحرمات يبدأ غالباً من:",
+        options: [
+          "التساهل في الشبهات والتهاون في الوقوع فيها",
+          "كثرة قراءة كتب الفقه المتخصصة",
+          "التفقه في مقاصد الشريعة الإسلامية",
+          "المحافظة الدائمة على صلاة الجماعة"
+        ],
+        ans: 0,
+        exp: "من تساهل في الشبهات قاده ذلك تدريجياً للوقوع في الحرام الصريح كشأن الراعي حول الحمى."
+      },
+      {
+        q: "الجهاد الذي يمارسه الطالب في دراسته والموظف في إتقان عمله والمواطن في التزامه بالقوانين يُعد من:",
+        options: [
+          "الجهاد بالمعنى الخاص",
+          "الجهاد بالمعنى العام الشامل لفعل الخير وعمارة الأرض",
+          "الجهاد بالنفس ومباشرة القتال",
+          "الجهاد العسكري الإلزامي"
+        ],
+        ans: 1,
+        exp: "الجهاد بالمعنى العام يشمل كل جهد مشروع في طاعة الله وخدمة المجتمع وبناء الوطن."
+      },
+      {
+        q: "عقد النكاح في الشريعة الإسلامية يتطلب وجود رضا تام من الزوجين وخلوهما من الموانع الشرعية، وهذا يجسد:",
+        options: [
+          "مبدأ الإكراه الاجتماعي",
+          "مبدأ الحرية والمسؤولية والكرامة الإنسانية للرجل والمرأة",
+          "إلغاء دور أولياء الأمور تماماً",
+          "صورية العقود الشرعية"
+        ],
+        ans: 1,
+        exp: "اشتراط الرضا والأهلية ينبع من احترام إرادة وكرامة الإنسان وحريته في الاختيار."
+      },
+      {
+        q: "المراد بالخير في قوله تعالى: ﴿وَلۡتَكُن مِّنكُمۡ أُمَّةٞ يَدۡعُونَ إِلَى ٱلۡخَيۡرِ﴾ هو:",
+        options: [
+          "جمع التبرعات المالية فقط",
+          "الإسلام وتعاليمه وفضائل الأعمال والأخلاق الكريمة",
+          "المناصب السياسية الدنيوية",
+          "التفوق في التجارة والصناعة فقط"
+        ],
+        ans: 1,
+        exp: "الدعوة إلى الخير تعني الدعوة إلى الإسلام، وشرائعه، وفضائل الأعمال."
+      },
+      {
+        q: "من مظاهر رحمة الإسلام في تشريع القتال أنه لم يُشرع للانتقام وسفك الدماء بل:",
+        options: [
+          "لفرض الإيمان بالقوة على جميع الأمم",
+          "لإعلاء كلمة الله ورد العدوان وحماية حرية الدعوة وأمن الأوطان",
+          "للاستيلاء على أراضي الآخرين ومواردهم الطبيعية",
+          "للقضاء التام على أصحاب الديانات الأخرى"
+        ],
+        ans: 1,
+        exp: "شرع الجهاد لرد العدوان وحماية الدعوة وحفظ كرامة وأمن الدولة والمقدسات."
+      },
+      {
+        q: "المسؤولية الشرعية في الأمر بالمعروف والنهي عن المنكر تتطلب فيمن يمارسها توفر:",
+        options: [
+          "العلم والحكمة والأسلوب الطيب والمهارة في التواصل",
+          "القوة الجسدية والبطش",
+          "التشدد واستخدام الكلمات القاسية",
+          "أن يكون معصوماً من كل الخطايا والذنوب"
+        ],
+        ans: 0,
+        exp: "يشترط في القائم بالأمر بالمعروف العلم والبصيرة والحكمة والرفق في القول."
+      },
+      {
+        q: "الحكمة من مشروعية النظر بين الخاطبين قبل إتمام عقد الزواج هي:",
+        options: [
+          "إلزام الطرفين بالعقد فوراً",
+          "حصول الألفة والمحبة والاطمئنان والوفاق بينهما",
+          "تحديد قائمة المنقولات الزوجية",
+          "إعلان الزواج رسمياً أمام القاضي"
+        ],
+        ans: 1,
+        exp: "قال ﷺ: «انظر إليها فإنه أحرى أن يؤدم بينكما» لترسيخ الألفة والاطمئنان."
+      },
+      {
+        q: "الوصف القرآني العظيم لحال الأوس والخزرج قبل نعمة الإسلام في سورة آل عمران هو:",
+        options: [
+          "﴿كُنتُمۡ أَعۡدَآءٗ فَأَلَّفَ بَيۡنَ قُلُوبِكُمۡ فَأَصۡبَحۡتُم بِنِعۡمَتِهِۦٓ إِخۡوَٰنٗا﴾",
+          "﴿وَٱعۡتَصِمُواْ بِحَبۡلِ ٱللَّهِ جَمِيعٗا﴾",
+          "﴿وَتَعَاوَنُواْ عَلَى ٱلۡبِرِّ وَٱلتَّقۡوَىٰ﴾",
+          "﴿إِنَّمَا ٱلۡمُؤۡمِنُونَ إِخۡوَةٞ﴾"
+        ],
+        ans: 0,
+        exp: "ذكرهم الله بحال العداوة والحروب الجاهلية وكيف جمع قلوبهم بالإسلام فأصبحوا إخواناً."
+      }
     ];
 
-    let userAnswers = new Array(examData.length).fill(null);
+    let currentMode = 'exam';
+    let userAnswers = new Array(questionsData.length).fill(null);
+    let timerInterval = null;
+    let timeRemaining = 35 * 60; // 35 minutes in seconds
+    let isSubmitted = false;
 
-    function renderQuiz() {
-        const container = document.getElementById('quiz-container');
-        container.innerHTML = '';
-
-        examData.forEach((item, index) => {
-            const card = document.createElement('div');
-            card.className = 'question-card';
-            card.id = `q-card-${index}`;
-
-            const isAnswered = userAnswers[index] !== null;
-            const selectedOpt = userAnswers[index];
-
-            let optionsHTML = '';
-            const prefixes = ['A', 'B', 'C', 'D'];
-
-            item.options.forEach((opt, optIdx) => {
-                let btnClass = 'option-btn';
-                if (isAnswered) {
-                    if (optIdx === item.answer) {
-                        btnClass += ' correct';
-                    } else if (optIdx === selectedOpt) {
-                        btnClass += ' wrong';
-                    }
-                }
-
-                optionsHTML += `
-                    <button class="${btnClass}" ${isAnswered ? 'disabled' : ''} onclick="handleAnswer(${index}, ${optIdx})">
-                        <span class="option-prefix">${prefixes[optIdx]}</span>
-                        <span class="option-text">${opt}</span>
-                    </button>
-                `;
-            });
-
-            card.innerHTML = `
-                <div class="card-header">
-                    <span class="q-number">QUESTION ${index + 1} OF 60</span>
-                    <span class="slide-badge"><i class="fa-solid fa-book-bookmark"></i> ${item.slide}</span>
-                </div>
-                <div class="question-text">${item.question}</div>
-                <div class="options-grid">
-                    ${optionsHTML}
-                </div>
-                <div class="explanation-box" id="expl-${index}" style="display: ${isAnswered ? 'block' : 'none'};">
-                    <strong><i class="fa-solid fa-lightbulb"></i> Explanation & Concept:</strong>
-                    ${item.explanation}
-                </div>
-            `;
-
-            container.appendChild(card);
-        });
-
-        updateStats();
+    function init() {
+      renderQuestions();
+      startTimer();
     }
 
-    function handleAnswer(questionIdx, selectedOptIdx) {
-        if (userAnswers[questionIdx] !== null) return;
+    function setMode(mode) {
+      if (currentMode === mode) return;
+      currentMode = mode;
+      document.getElementById('examModeBtn').classList.toggle('active', mode === 'exam');
+      document.getElementById('practiceModeBtn').classList.toggle('active', mode === 'practice');
 
-        userAnswers[questionIdx] = selectedOptIdx;
+      document.getElementById('timerBadge').style.display = (mode === 'exam') ? 'flex' : 'none';
+      document.getElementById('scoreBadge').style.display = (mode === 'practice') ? 'block' : 'none';
+      document.getElementById('submitBox').style.display = (mode === 'exam' && !isSubmitted) ? 'block' : 'none';
 
-        // Re-render specific question card
-        const card = document.getElementById(`q-card-${questionIdx}`);
-        const item = examData[questionIdx];
-        const buttons = card.querySelectorAll('.option-btn');
+      // Reset state for a fresh mode run
+      userAnswers.fill(null);
+      isSubmitted = false;
+      document.getElementById('resultBanner').style.display = 'none';
+      
+      if (mode === 'exam') {
+        timeRemaining = 35 * 60;
+        startTimer();
+      } else {
+        clearInterval(timerInterval);
+      }
 
-        buttons.forEach((btn, optIdx) => {
-            btn.disabled = true;
-            if (optIdx === item.answer) {
-                btn.classList.add('correct');
-            } else if (optIdx === selectedOptIdx) {
-                btn.classList.add('wrong');
-            }
-        });
-
-        const explBox = document.getElementById(`expl-${questionIdx}`);
-        explBox.style.display = 'block';
-
-        updateStats();
+      renderQuestions();
+      updateLiveScore();
     }
 
-    function updateStats() {
-        let answeredCount = 0;
-        let correctCount = 0;
-        let wrongCount = 0;
-
-        userAnswers.forEach((ans, idx) => {
-            if (ans !== null) {
-                answeredCount++;
-                if (ans === examData[idx].answer) {
-                    correctCount++;
-                } else {
-                    wrongCount++;
-                }
-            }
-        });
-
-        const scorePercent = answeredCount > 0 ? Math.round((correctCount / examData.length) * 100) : 0;
-        const progressPercent = Math.round((answeredCount / examData.length) * 100);
-
-        document.getElementById('score-val').innerText = `${correctCount} / ${examData.length}`;
-        document.getElementById('progress-val').innerText = `${progressPercent}%`;
-        document.getElementById('correct-val').innerText = correctCount;
-        document.getElementById('wrong-val').innerText = wrongCount;
-
-        document.getElementById('p-bar').style.width = `${progressPercent}%`;
-    }
-
-    function filterQuestions(type) {
-        const buttons = document.querySelectorAll('.filter-buttons .btn');
-        buttons.forEach(btn => btn.classList.remove('active'));
-        event.currentTarget.classList.add('active');
-
-        examData.forEach((item, index) => {
-            const card = document.getElementById(`q-card-${index}`);
-            const isAnswered = userAnswers[index] !== null;
-            const isCorrect = isAnswered && userAnswers[index] === item.answer;
-
-            if (type === 'all') {
-                card.style.display = 'block';
-            } else if (type === 'unanswered') {
-                card.style.display = !isAnswered ? 'block' : 'none';
-            } else if (type === 'correct') {
-                card.style.display = isCorrect ? 'block' : 'none';
-            } else if (type === 'wrong') {
-                card.style.display = (isAnswered && !isCorrect) ? 'block' : 'none';
-            }
-        });
-    }
-
-    function resetQuiz() {
-        if (confirm("Are you sure you want to reset the exam and clear all your answers?")) {
-            userAnswers = new Array(examData.length).fill(null);
-            renderQuiz();
+    function startTimer() {
+      clearInterval(timerInterval);
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        updateTimerDisplay();
+        if (timeRemaining <= 0) {
+          clearInterval(timerInterval);
+          finishExam();
         }
+      }, 1000);
     }
 
-    // Initialize Quiz on load
-    window.onload = renderQuiz;
-</script>
+    function updateTimerDisplay() {
+      const mins = Math.floor(timeRemaining / 60);
+      const secs = timeRemaining % 60;
+      document.getElementById('timerDisplay').innerText = 
+        `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function renderQuestions() {
+      const list = document.getElementById('questionsList');
+      list.innerHTML = '';
+
+      const letters = ['أ', 'ب', 'ج', 'د'];
+
+      questionsData.forEach((q, qIndex) => {
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.id = `qCard_${qIndex}`;
+
+        const header = document.createElement('div');
+        header.className = 'q-header';
+        header.innerHTML = `
+          <span class="q-number">السؤال ${qIndex + 1} / 100</span>
+          <div class="q-text">${q.q}</div>
+        `;
+        card.appendChild(header);
+
+        const optionsGrid = document.createElement('div');
+        optionsGrid.className = 'options-grid';
+
+        q.options.forEach((opt, optIndex) => {
+          const optDiv = document.createElement('div');
+          optDiv.className = 'option-item';
+          optDiv.id = `opt_${qIndex}_${optIndex}`;
+          optDiv.onclick = () => handleOptionClick(qIndex, optIndex);
+
+          optDiv.innerHTML = `
+            <span class="opt-letter">${letters[optIndex]}</span>
+            <span>${opt}</span>
+          `;
+          optionsGrid.appendChild(optDiv);
+        });
+
+        card.appendChild(optionsGrid);
+
+        const expBox = document.createElement('div');
+        expBox.className = 'explanation-box';
+        expBox.id = `exp_${qIndex}`;
+        expBox.innerHTML = `<strong>الإيضاح الوزاري:</strong> ${q.exp}`;
+        card.appendChild(expBox);
+
+        list.appendChild(card);
+      });
+    }
+
+    function handleOptionClick(qIndex, optIndex) {
+      if (currentMode === 'exam' && isSubmitted) return;
+
+      if (currentMode === 'exam') {
+        userAnswers[qIndex] = optIndex;
+        // Visual selection
+        for (let i = 0; i < 4; i++) {
+          const el = document.getElementById(`opt_${qIndex}_${i}`);
+          el.classList.toggle('selected', i === optIndex);
+        }
+      } else if (currentMode === 'practice') {
+        if (userAnswers[qIndex] !== null) return; // already answered
+        userAnswers[qIndex] = optIndex;
+
+        const correctAns = questionsData[qIndex].ans;
+        const selectedEl = document.getElementById(`opt_${qIndex}_${optIndex}`);
+        const correctEl = document.getElementById(`opt_${qIndex}_${correctAns}`);
+        const expEl = document.getElementById(`exp_${qIndex}`);
+
+        if (optIndex === correctAns) {
+          selectedEl.classList.add('correct');
+        } else {
+          selectedEl.classList.add('wrong');
+          correctEl.classList.add('correct');
+        }
+
+        // Disable options for this question
+        for (let i = 0; i < 4; i++) {
+          document.getElementById(`opt_${qIndex}_${i}`).classList.add('disabled');
+        }
+
+        expEl.style.display = 'block';
+        updateLiveScore();
+      }
+    }
+
+    function updateLiveScore() {
+      let correct = 0;
+      let answered = 0;
+      userAnswers.forEach((ans, idx) => {
+        if (ans !== null) {
+          answered++;
+          if (ans === questionsData[idx].ans) correct++;
+        }
+      });
+      const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+      document.getElementById('liveScore').innerText = `${correct} / ${answered} (${pct}%)`;
+    }
+
+    function finishExam() {
+      if (isSubmitted) return;
+      isSubmitted = true;
+      clearInterval(timerInterval);
+
+      let correctCount = 0;
+      questionsData.forEach((q, qIndex) => {
+        const userAns = userAnswers[qIndex];
+        const correctAns = q.ans;
+
+        if (userAns === correctAns) {
+          correctCount++;
+        }
+
+        // Highlight options
+        for (let i = 0; i < 4; i++) {
+          const el = document.getElementById(`opt_${qIndex}_${i}`);
+          el.classList.add('disabled');
+          el.classList.remove('selected');
+
+          if (i === correctAns) {
+            el.classList.add('correct');
+          } else if (i === userAns && userAns !== correctAns) {
+            el.classList.add('wrong');
+          }
+        }
+
+        // Reveal explanations
+        document.getElementById(`exp_${qIndex}`).style.display = 'block';
+      });
+
+      // Show result banner
+      const banner = document.getElementById('resultBanner');
+      banner.style.display = 'block';
+      document.getElementById('finalScoreDisplay').innerText = `${correctCount} / 100`;
+      const pct = Math.round((correctCount / 100) * 100);
+      document.getElementById('finalScorePercent').innerText = `النسبة المئوية: ${pct}% - التقدير: ${getGrade(pct)}`;
+      document.getElementById('submitBox').style.display = 'none';
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function getGrade(pct) {
+      if (pct >= 90) return 'ممتاز (مستوى متقدم جداً)';
+      if (pct >= 80) return 'جيد جداً (متمكن)';
+      if (pct >= 70) return 'جيد (بحاجة لمراجعة بعض المفاهيم الدقيقة)';
+      if (pct >= 50) return 'مقبول';
+      return 'بحاجة إلى إعادة دراسة مكثفة للوحدة';
+    }
+
+    window.onload = init;
+  </script>
 </body>
 </html>
-```eof
-
-I will now generate the interactive HTML software architecture exam based on the chapter material.
-
-لقد قمت بإنشاء ملف الامتحان التفاعلي الكامل الشامل لـ **Software Architecture** بـ 60 سؤالاً متوازناً على جميع السلايدات من 1 إلى 51، مع ميزات التصحيح الفوري والإيضاحات الأكاديمية لكل سؤال!
